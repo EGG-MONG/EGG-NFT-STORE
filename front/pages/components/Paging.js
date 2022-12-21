@@ -1,35 +1,56 @@
 import React from "react";
-import styles from "../../styles/paging.module.css";
+import styled from "styled-components";
 
 const Paging = ({ total, limit, page, setPage }) => {
   const numPages = Math.ceil(total / limit);
   return (
-    <div className={styles.pagingArea}>
-      <button className={styles.btnStyle} onClick={() => setPage((page = 1))} disabled={page === 1}>
+    <PagingWrap>
+      <BtnStyle onClick={() => setPage((page = 1))} disabled={page === 1}>
         &lt;&lt;
-      </button>
-      <button className={styles.btnStyle} onClick={() => setPage(page - 1)} disabled={page === 1}>
+      </BtnStyle>
+      <BtnStyle onClick={() => setPage(page - 1)} disabled={page === 1}>
         &lt;
-      </button>
+      </BtnStyle>
       {Array(numPages)
         .fill()
         .map((_, i) => (
-          <button className={styles.btnStyle}
-            key={i + 1}
-            onClick={() => setPage(i + 1)}
-            aria-current={page === i + 1 ? "page" : null}
-          >
+          <BtnStyle key={i + 1} onClick={() => setPage(i + 1)}>
             {i + 1}
-          </button>
+          </BtnStyle>
         ))}
-      <button className={styles.btnStyle} onClick={() => setPage(page + 1)} disabled={page === numPages}>
+      <BtnStyle onClick={() => setPage(page + 1)} disabled={page === numPages}>
         &gt;
-      </button>
-      <button className={styles.btnStyle} onClick={() => setPage(numPages)} disabled={page === numPages}>
+      </BtnStyle>
+      <BtnStyle onClick={() => setPage(numPages)} disabled={page === numPages}>
         &gt; &gt;
-      </button>
-    </div>
+      </BtnStyle>
+    </PagingWrap>
   );
 };
 
+const PagingWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1.5rem;
+`;
+
+const BtnStyle = styled.button`
+  border: none;
+  padding: 8px;
+  border-radius: 1rem;
+  background: transparent;
+  color: black;
+  font-size: 1rem;
+
+  :hover {
+    color: white;
+    background: plum;
+    cursor: pointer;
+  }
+
+  :disabled {
+    display: none;
+  }
+`;
 export default Paging;
