@@ -1,0 +1,39 @@
+{
+  "name": "Egg Collection #94",
+  "description": "cute Egg collection",
+  "image": "ipfs://NewUriToReplace/94.png",
+  "dna": "795bf8777616977113e1f29b89efbfe959c0ad19",
+  "edition": 94,
+  "date": 1671504093926,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Purple"
+    },
+    {
+      "trait_type": "Border",
+      "value": "Black"
+    },
+    {
+      "trait_type": "Egg background",
+      "value": "White"
+    },
+    {
+      "trait_type": "Pattern",
+      "value": "Purple"
+    },
+    {
+      "trait_type": "Eye",
+      "value": "Big"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Smile"
+    },
+    {
+      "trait_type": "Shadow",
+      "value": "Left"
+    }
+  ],
+  "compiler": "HashLips Art Engine"
+}
