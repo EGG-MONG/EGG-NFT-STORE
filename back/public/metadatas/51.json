@@ -1,0 +1,39 @@
+{
+  "name": "Egg Collection #51",
+  "description": "cute Egg collection",
+  "image": "ipfs://NewUriToReplace/51.png",
+  "dna": "3c01e24995cb5d3e7335679445702b141e78a1e4",
+  "edition": 51,
+  "date": 1671504089285,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Green"
+    },
+    {
+      "trait_type": "Border",
+      "value": "Black"
+    },
+    {
+      "trait_type": "Egg background",
+      "value": "White"
+    },
+    {
+      "trait_type": "Pattern",
+      "value": "Green"
+    },
+    {
+      "trait_type": "Eye",
+      "value": "Big"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "None"
+    },
+    {
+      "trait_type": "Shadow",
+      "value": "Left"
+    }
+  ],
+  "compiler": "HashLips Art Engine"
+}
