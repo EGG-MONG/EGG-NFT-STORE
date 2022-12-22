@@ -19,13 +19,10 @@ contract SaleToken {
     uint[] public SaleTokenList;
 
     // 판매 등록 이벤트 등록
-    event List(uint tokenId, string state, uint price, address from, address to);
+    event List(uint price, address from, address to);
 
     // 구매 이벤트 등록
-    event Sale(uint tokenId, string state, uint price, address from, address to);
-
-    // 교환 이벤트 등록
-    event Transfer(uint tokenId, string state, uint price, address from, address to);
+    event Purchase(uint price, address from, address to);
 
     // 생성자에서 배포된 EggToken CA를 받아서 Token 상태변수에 저장한다.
     constructor(address _eggTokenCA) {
@@ -50,7 +47,7 @@ contract SaleToken {
         // 판매 리스트 배열에 추가
         SaleTokenList.push(_tokenId);
 
-        emit List(_tokenId, "List", _price, msg.sender, address(0));
+        emit List(_price, msg.sender, address(0));
     }
 
     function PurchaseToken(uint _tokenId) public payable {
@@ -77,8 +74,7 @@ contract SaleToken {
 
         popSaleToken(_tokenId); 
 
-        emit Sale(_tokenId, "Sale", msg.value, tokenOwner, msg.sender);
-        emit Transfer(_tokenId, "Transfer", 0, tokenOwner, msg.sender);
+        emit Purchase(msg.value, tokenOwner, msg.sender);
     }
 
     function popSaleToken(uint _tokenId) private returns (bool) {

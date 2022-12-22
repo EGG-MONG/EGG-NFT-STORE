@@ -20,7 +20,7 @@ contract EggToken is ERC721Enumerable, Ownable {
 
     // minting 이벤트 등록
 
-    event Minting(uint tokenId, string state, uint price, address from, address to);
+    event Minted(uint price, address from, address to);
 
     // 생성자 함수
     constructor(string memory _name, string memory _symbol, string memory _metadataURI) ERC721 (_name, _symbol) {
@@ -44,7 +44,7 @@ contract EggToken is ERC721Enumerable, Ownable {
 
         setApprovalForAll(_saleContractCA, true);
 
-        emit Minting(tokenId, "Minted", 0, address(0), msg.sender);
+        emit Minted(0, address(0), msg.sender);
     }
 
     function tokenURI(uint _tokenId) public override view returns (string memory) {
