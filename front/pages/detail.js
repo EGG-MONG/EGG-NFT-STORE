@@ -1,12 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import NavBar from "../pages/components/NavBar";
 const detail = () => {
   return (
     <>
-      <NavBar />
       <EntireWrap>
-        <MainContainer>
+        <InfoWrap>
           <div>
             <DetailImg src="/Img/example.jpg" alt="sellingItems" />
           </div>
@@ -16,7 +14,6 @@ const detail = () => {
               Owned by <OwnerName>Owner</OwnerName>
             </OwnerArea>
             <PriceBox>0.5ETH</PriceBox>
-
             <IconBox>
               <span>&nbsp;views</span>
               <span>&nbsp;likes</span>
@@ -27,9 +24,9 @@ const detail = () => {
               <Button>Sell(Offer)</Button> */}
             </BtnBox>
           </div>
-        </MainContainer>
+        </InfoWrap>
 
-        <MainContainer>
+        <DetailWrap>
           <div>
             <ul>
               <li>Contract Address</li>
@@ -38,7 +35,7 @@ const detail = () => {
               <li>Chain </li>
             </ul>
           </div>
-        </MainContainer>
+        </DetailWrap>
       </EntireWrap>
     </>
   );
@@ -46,13 +43,15 @@ const detail = () => {
 
 const EntireWrap = styled.div`
   width: inherit;
-  height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
-const MainContainer = styled.div`
-  display: flex;
+
+const InfoWrap = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 5fr);
   justify-content: center;
   align-items: center;
 `;
@@ -95,4 +94,9 @@ const BtnBox = styled.div`
   margin-top: 3rem;
 `;
 
+const DetailWrap = styled.div`
+  width: 100vw;
+  height: inherit;
+  background-color: aliceblue;
+`;
 export default detail;

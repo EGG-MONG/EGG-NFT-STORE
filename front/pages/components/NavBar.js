@@ -9,8 +9,12 @@ const NavBar = () => {
         <Image src="/logo.png" alt="logo" width={200} height={30} />
       </Link>
       <MenuWrap>
-        <MenuBtn href="/mypage">=</MenuBtn>
-        <MenuBtn href="/upload">+</MenuBtn>
+        <MenuBtn href="/mypage">
+          <Image alt="Icon" src="/mypage.png" width={40} height={40} />
+        </MenuBtn>
+        <MenuBtn href="/upload">
+          <Image alt="Icon" src="/upload.png" width={40} height={40} />
+        </MenuBtn>
       </MenuWrap>
     </NavWrap>
   );
@@ -27,7 +31,6 @@ const NavWrap = styled.div`
   letter-spacing: -0.2;
   padding-left: 3rem;
   padding-right: 3rem;
-  background-color: plum;
   // hover 애니메이션 추가하기
 `;
 const MenuWrap = styled.div`
