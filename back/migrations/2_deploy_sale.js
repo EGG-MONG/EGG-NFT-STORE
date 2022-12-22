@@ -5,7 +5,7 @@ const SaleToken = artifacts.require("SaleToken");
 module.exports = async function (deployer) {
     
     // 토큰 먼저 배포
-    await deployer.deploy(EggToken);
+    await deployer.deploy(EggToken, "Egg Token", "ETK", "");
 
     // 배포된 인스턴스 가져오기
     // SoonToken.address 배포된 컨트랙트의 CA 가져와짐 
