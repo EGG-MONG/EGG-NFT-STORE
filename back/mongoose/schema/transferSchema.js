@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const transferSchema = new mongoose.Schema(
   {
+    tokenId : Number,
     transactionHash: String,
     type: String,
     price: Number,
