@@ -1,18 +1,17 @@
-import Link from "next/link";
-import Search from "../pages/components/Search";
-import Paging from "../pages/components/Paging";
-import { useEffect, useState } from "react";
+import Search from "../components/Search";
+import Paging from "../components/Paging";
 import styled from "styled-components";
-import Image from "next/Image";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const index = () => {
+const Shop = () => {
   // 페이지 네이션
   const [items, setItems] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+
   const offset = (page - 1) * limit;
 
-  // data 불러오기
   useEffect(() => {}, []);
 
   return (
@@ -24,15 +23,10 @@ const index = () => {
         <ItemsWrap>
           {items.slice(offset, offset + limit).map(({ id, title }) => (
             <Cards key={id}>
-              <Image
-                alt="example"
-                src="/Img/example.jpg"
-                width={200}
-                height={200}
-              />
+              <Image alt="example" src="/Img/example.jpg" />
               <div>
                 <ItemTitle>
-                  <Link href="/detail">{title}</Link>
+                  <Link to="/detail">{title}</Link>
                 </ItemTitle>
                 <div>{id}ETH</div>
                 <BtnWrap>
@@ -77,7 +71,10 @@ const ItemsWrap = styled.div`
   column-gap: 1rem;
   row-gap: 1rem;
 `;
-
+const Image = styled.image`
+  width: 200px;
+  height: 200px;
+`;
 const ItemTitle = styled.h1`
   font-size: 1.3rem;
   font-weight: 700;
@@ -102,4 +99,4 @@ const BtnWrap = styled.div`
 const Btn = styled.button`
   width: 100px;
 `;
-export default index;
+export default Shop;

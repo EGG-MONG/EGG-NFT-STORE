@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Web3 from "web3/dist/web3.min";
 
 const useWeb3 = () => {
@@ -6,14 +6,6 @@ const useWeb3 = () => {
   const [account, setAccount] = useState(null);
   // 클라이언트랑 메타마스크를 통신 시켜줄 web3
   const [web3, setWeb3] = useState(null);
-  
-  window.addEventListener('load', function() {
-    if (typeof web3 !== 'undefined') {
-      web3js = new Web3(web3.currentProvider);
-    } else {
-    }
-    startApp()
-  })
 
   useEffect(() => {
     // 화살표 async 즉시 실행 함수

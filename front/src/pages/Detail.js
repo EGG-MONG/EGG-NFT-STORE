@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-const detail = () => {
+
+const Detail = () => {
   return (
     <>
       <EntireWrap>
@@ -99,4 +100,4 @@ const DetailWrap = styled.div`
   height: inherit;
   background-color: aliceblue;
 `;
-export default detail;
+export default Detail;

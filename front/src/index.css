@@ -1,13 +1,13 @@
 @font-face {
-  font-family: "NanumSquareNeo-Variable";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2")
-    format("woff2");
+  font-family: "establishnaneunyahaeginsaOTF";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2112@1.0/establishnaneunyahaeginsaOTF.woff")
+    format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
 * {
-  font-family: "NanumSquareNeo-Variable";
+  font-family: "establishnaneunyahaeginsaOTF";
   box-sizing: border-box;
   padding: 0;
   margin: 0;
