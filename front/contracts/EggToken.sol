@@ -27,24 +27,22 @@ contract EggToken is ERC721Enumerable, Ownable {
         metadataURI = _metadataURI;
     }
 
-    function mintToken(address _saleContractCA) public payable {
+    function mintToken(address _saleContractCA, uint _tokenId) public payable {
         // mintPrice보다 지불하려는 가격이 이상일 경우에만 실행한다
         require(msg.value >= mintPrice);
 
         // 최대발행량이 현재 총발행량보다 클 때 발행한다.
         require(MAX_TOKEN_COUNT > totalSupply());
 
-        uint tokenId = totalSupply() + 1;
-
         // CA에 지급받은 이더를 전송해준다.
         payable(Ownable.owner()).transfer(msg.value);
 
         // 함수를 호출한 계정(배포자)에 NTF 발행
-        _mint(msg.sender, tokenId);
+        _mint(msg.sender, _tokenId);
 
         setApprovalForAll(_saleContractCA, true);
 
-        emit Minting(tokenId, "Minted", 0, address(0), msg.sender);
+        emit Minting(_tokenId, "Minted", 0, address(0), msg.sender);
     }
 
     function tokenURI(uint _tokenId) public override view returns (string memory) {
