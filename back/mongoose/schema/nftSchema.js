@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const transactionSchema = require("./transactionSchema");
+const transferSchema = require("./transferSchema");
 const nftSchema = new mongoose.Schema(
   {
     name: String,
@@ -14,6 +16,8 @@ const nftSchema = new mongoose.Schema(
       {
         trait_type: String,
         value: String,
+        // 희귀도 백분위로 나타냄
+        rare: Number,
       },
     ],
     transactions: [transactionSchema.schema],
