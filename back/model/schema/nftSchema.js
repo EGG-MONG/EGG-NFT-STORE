@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const nftSchema = new mongoose.Schema(
   {
+    tokenId : {type : Number, index : true, unique : true},
     name: String,
     owner: String,
     maker: String,
