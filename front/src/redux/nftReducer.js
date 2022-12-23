@@ -19,9 +19,9 @@ function getNftList() {
 function addNft(_nftJsonObj, _transaction, _transfer){
   return async (dispatch, getState) => {
     const result = await NftAPI.addNft(_nftJsonObj, _transaction, _transfer);
-    
+
     if (result?.ret === SUCCESS) {
-      dispatch({ type: LIST, payload: { nftList } });
+      // dispatch({ type: LIST, payload: { nftList } });
     }
   }
 }
