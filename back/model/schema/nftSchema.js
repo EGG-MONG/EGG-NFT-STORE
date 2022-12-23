@@ -3,6 +3,7 @@ const transactionSchema = require("./transactionSchema");
 const transferSchema = require("./transferSchema");
 const nftSchema = new mongoose.Schema(
   {
+    tokenId : {type : Number, index : true, unique : true},
     name: String,
     owner: String,
     maker: String,

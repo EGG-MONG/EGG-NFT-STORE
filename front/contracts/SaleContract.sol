@@ -16,13 +16,13 @@ contract SaleContract {
         uint price;
     }
 
-    uint[] public SaleContractList;
+    uint8[] public SaleContractList;
 
     // 판매 등록 이벤트 등록
-    event List(uint tokenId, string state, uint price, address from, address to);
+    event List(uint8 tokenId, string state, uint price, address from, address to);
 
     // 구매 이벤트 등록
-    event Sale(uint tokenId, string state, uint price, address from, address to);
+    event Sale(uint8 tokenId, string state, uint price, address from, address to);
 
     // 교환 이벤트 등록
     event Transfer(uint tokenId, string state, uint price, address from, address to);
@@ -33,14 +33,14 @@ contract SaleContract {
     }
 
     // 판매 등록 함수
-    function ListFotSaleContract(uint _tokenId, uint _price) public {
+    function ListFotSaleContract(uint8 _tokenId, uint _price) public {
         address tokenOwner = Token.ownerOf(_tokenId);
 
         // 판매가격이 0 이하면 함수 종료
-        require(_price > 0, "The selling price must be at least zero");
+        require(_price > 0, "SaleContract : The selling price must be at least zero");
 
         // 함수를 실행하는 사람(판매자)이 모든 권한이 있는지 판단한다.
-        require(msg.sender == tokenOwner, "be not the owner" );
+        require(msg.sender == tokenOwner, "SaleContract : Be not the owner" );
 
         // require(Token.isApprovedForAll(msg.sender, address(this)), "approve caller is not owner nor approved for all");
 
@@ -53,18 +53,18 @@ contract SaleContract {
         emit List(_tokenId, "List", _price, msg.sender, address(0));
     }
 
-    function PurchaseToken(uint _tokenId) public payable {
+    function PurchaseToken(uint8 _tokenId) public payable {
         // 토큰 소유자 계정
         address tokenOwner = Token.ownerOf(_tokenId);
 
         // 토큰 소유자가 자신의 토큰을 구매하는 것을 막는다.
-        require(tokenOwner != msg.sender, "Owner cannot buy");
+        require(tokenOwner != msg.sender, "SaleContract : Owner cannot buy");
 
         // 판매중인 토큰만 구매할 수 있게 한다ㅏ.
-        require(tokenPrices[_tokenId] > 0, "Tokens are not for sale");
+        require(tokenPrices[_tokenId] > 0, "SaleContract : Tokens are not for sale");
 
         // 구매자가 지불할 금액이 판매 가격 이상인지 확인한다.
-        require(tokenPrices[_tokenId] <= msg.value, "Offer more than the selling price");
+        require(tokenPrices[_tokenId] <= msg.value, "SaleContract : Offer more than the selling price");
 
         // CA가 토큰 판매자에게 이더를 전송한다.
         payable(tokenOwner).transfer(msg.value);
@@ -81,7 +81,7 @@ contract SaleContract {
         emit Transfer(_tokenId, "Transfer", 0, tokenOwner, msg.sender);
     }
 
-    function popSaleContract(uint _tokenId) private returns (bool) {
+    function popSaleContract(uint8 _tokenId) private returns (bool) {
         for (uint256 i = 0; i < SaleContractList.length; i++) {
             if(SaleContractList[i] == _tokenId){
                 // 마지막에 저장되어 있던 요소를 삭제해야할 인덱스에 저장
@@ -103,8 +103,8 @@ contract SaleContract {
         
         TokenInfo[] memory list = new TokenInfo[](SaleContractList.length);
 
-        for (uint256 i = 0; i < SaleContractList.length; i++) {
-            uint tokenId = SaleContractList[i];
+        for (uint8 i = 0; i < SaleContractList.length; i++) {
+            uint8 tokenId = SaleContractList[i];
             uint price = tokenPrices[tokenId];
             // 토큰 인포 구조체 생성해서 저장
             list[i] = TokenInfo(tokenId, price);
@@ -120,7 +120,7 @@ contract SaleContract {
 
         TokenInfo[] memory list = new TokenInfo[](balance);
 
-        for (uint256 i = 0; i < balance; i++) {
+        for (uint8 i = 0; i < balance; i++) {
             // 소유 중인 토큰을 순서대로 가지고 온다.
             uint tokenId = Token.tokenOfOwnerByIndex(_tokenOwner, i);
             uint price = tokenPrices[tokenId];

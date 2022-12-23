@@ -13,4 +13,5 @@ module.exports = () => {
   require('./schema/blockSchema.js');
   require('./schema/transactionSchema.js');
   require("./schema/transferSchema");
+  require("./schema/favoritesSchema")
 };

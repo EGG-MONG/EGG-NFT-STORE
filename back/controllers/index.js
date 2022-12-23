@@ -1,26 +1,8 @@
-const BlockService = require("../service/block_service");
-const { SUCCESS, FAIL,  } = require("../config/respons");
+const express = require("express");
 
-module.exports.get = async (req, res) => {
+const router = express.Router();
 
-    const { hash } = req.body;
-  
-    const block = await BlockService.get(hash);
+const BlockController = require("../controllers/block_controller");
+const FavoriteController = require("../controllers/favorites_controller");
 
-    if(block){
-      res.send({ret : SUCCESS,  block });
-    }else{
-      res.send({ret : FAIL});
-    }
-};
-
-module.exports.getList = async (req, res) => {
-
-    const blockList = await BlockService.getList();
-    
-    if(blockList){
-      res.send({ret : SUCCESS,  blockList });
-    }else{
-      res.send({ret : FAIL});
-    }
-};
+module.exports = router;
