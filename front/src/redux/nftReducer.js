@@ -2,19 +2,6 @@ import { NftAPI, SUCCESS } from "../api";
 import { LIST, ADD, MODIFY, MAKER } from './common';
 import produce from 'immer';
 
-function getNftList() {
-  return async (dispatch, getState) => {
-
-    const result = await NftAPI.getNftAll();
-
-    const nftList = result?.nftList;
-
-    if (result?.ret === SUCCESS) {
-      dispatch({ type: LIST, payload: { nftList } });
-    }
-  };
-}
-
 function addNft(_tokenURI, _transaction, _transfer){
   return async (dispatch, getState) => {
     
@@ -31,7 +18,7 @@ function addNft(_tokenURI, _transaction, _transfer){
     nft = addNftAttr({_nft : nft, _tokenURI, _transaction, _transfer});
     
     
-    const result = await NftAPI.addNft(nft, _transaction, _transfer);
+    const result = await NftAPI.add(nft, _transaction, _transfer);
 
     if (result?.ret === SUCCESS) {
       dispatch({ type: ADD, payload: { nft } });
@@ -39,9 +26,21 @@ function addNft(_tokenURI, _transaction, _transfer){
   }
 }
 
+function getNftList() {
+  return async (dispatch, getState) => {
+
+    const result = await NftAPI.getAll();
+
+    if (result?.ret === SUCCESS) {
+      const list = result?.list;
+      dispatch({ type: LIST, payload: { list } });
+    }
+  };
+}
+
 function modifyNft(_tokenId, _nft){
   return async (dispatch, getState) => {
-    const result = await NftAPI.modifyNft(_tokenId, _nft);
+    const result = await NftAPI.modify(_tokenId, _nft);
     
     if (result?.ret === SUCCESS) {
       const nft = result.nft;
@@ -77,7 +76,7 @@ function addNftAttr({_ntf, _tokenURI, _transaction, _transfer}){
 }
 
 
-export { getNftList, addNft, modifyNft};
+export { addNft, getNftList, modifyNft};
 
 const init = {
     list : []
@@ -86,13 +85,14 @@ const init = {
 function nft(state = init, action) {
     const {type, payload} = action;
     switch (type) {
-        case LIST:
-            return produce(state, draft => {
-              draft.list = payload.nftList;
-            });
+
         case ADD:
             return produce(state, draft => {
               draft.list.push(payload.nft);
+            });
+        case LIST:
+            return produce(state, draft => {
+              draft.list = payload.list;
             });
         case MODIFY:
             return produce(state, draft => {

@@ -1,10 +1,6 @@
 import * as NftAPI from './nft';
+import * as FavoritesAPI from './favorites';
 
-const SUCCESS = "SUCCESS";
-const FAIL = "FAIL";
-const OVERLAP = "OVERLAP";
-const POSSIBLE = "POSSIBLE";
-
-export { NftAPI, 
+export { NftAPI, FavoritesAPI,
         SUCCESS, FAIL, OVERLAP, POSSIBLE,
 }
