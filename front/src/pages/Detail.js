@@ -7,7 +7,7 @@ const Detail = () => {
       <EntireWrap>
         <InfoWrap>
           <div>
-            <DetailImg src="/Img/example.jpg" alt="sellingItems" />
+            <DetailImg src="/Img/egg_1.png" alt="sellingItems" />
           </div>
           <div>
             <NftTitle>NFT-TEST-NAME</NftTitle>
@@ -16,26 +16,30 @@ const Detail = () => {
             </OwnerArea>
             <PriceBox>0.5ETH</PriceBox>
             <IconBox>
-              <span>&nbsp;views</span>
-              <span>&nbsp;likes</span>
+              <span>
+                <img src="/view.png" alt="icon" />
+                &nbsp;views
+              </span>
+              <span>
+                <img src="/like.png" alt="icon" />
+                &nbsp;likes
+              </span>
             </IconBox>
             <BtnBox>
-              {/* <Button>Buy</Button>
+              <Button>Buy</Button>
               <Button>cart</Button>
-              <Button>Sell(Offer)</Button> */}
+              <Button>Sell(Offer)</Button>
             </BtnBox>
           </div>
         </InfoWrap>
 
         <DetailWrap>
-          <div>
-            <ul>
-              <li>Contract Address</li>
-              <li>Token ID</li>
-              <li>Token Standard</li>
-              <li>Chain </li>
-            </ul>
-          </div>
+          <ul>
+            <li>ABOUT</li>
+            <li>PROPERTIES</li>
+            <li>DETAIL</li>
+            <li>TRANSFER</li>
+          </ul>
         </DetailWrap>
       </EntireWrap>
     </>
@@ -55,6 +59,19 @@ const InfoWrap = styled.div`
   grid-template-columns: repeat(2, 5fr);
   justify-content: center;
   align-items: center;
+  column-gap: 2rem;
+
+  > div:first-child {
+    width: 500px;
+    height: 500px;
+    background-color: #b2b2b2;
+    border-radius: 1rem;
+  }
+`;
+
+const DetailImg = styled.img`
+  width: inherit;
+  height: inherit;
 `;
 
 const NftTitle = styled.h1`
@@ -66,7 +83,7 @@ const OwnerArea = styled.div`
 `;
 
 const OwnerName = styled.span`
-  font-size: 1.2rem;
+  font-size: 2rem;
   font-weight: 700;
 `;
 
@@ -76,28 +93,55 @@ const PriceBox = styled.div`
 `;
 
 const IconBox = styled.div`
-  width: 10vw;
+  width: 15vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 1.8rem;
   margin-bottom: 1rem;
-`;
-
-const DetailImg = styled.img`
-  border-radius: 1rem;
-  margin: 2rem;
+  > span {
+    display: inherit;
+    align-items: center;
+  }
+  > span > img {
+    width: 2rem;
+  }
 `;
 
 const BtnBox = styled.div`
   display: grid;
-  grid-template-rows: repeat(3, 2fr);
+  justify-items: center;
+  grid-template-columns: repeat(3, 2fr);
   row-gap: 0.5rem;
   margin-top: 3rem;
+`;
+
+const Button = styled.button`
+  cursor: pointer;
+  width: 10rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+  padding-top: 0.3rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  border: 0.5px solid gray;
+
+  &:hover {
+    background-color: plum;
+    color: white;
+  }
 `;
 
 const DetailWrap = styled.div`
   width: 100vw;
   height: inherit;
-  background-color: aliceblue;
+  margin-top: 2rem;
+  > ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+  }
 `;
+
 export default Detail;
