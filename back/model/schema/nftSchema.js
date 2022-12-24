@@ -13,7 +13,7 @@ const nftSchema = new mongoose.Schema(
     date: Number,
     state: String,
     price: Number,
-    attribute: [
+    attributes: [
       {
         trait_type: String,
         value: String,
@@ -22,7 +22,8 @@ const nftSchema = new mongoose.Schema(
       },
     ],
     transactions: [transactionSchema.schema],
-    transfer: [transferSchema.schema],
+    transfers: [transferSchema.schema],
+    uri : String,
   },
   { timestamps: true }
 );

@@ -77,7 +77,7 @@ contract SaleContract {
 
         popSaleContract(_tokenId); 
 
-        emit Sale(_tokenId, "Sale", msg.value, tokenOwner, msg.sender);
+        emit Sale(_tokenId, "Sale", msg.value, msg.sender, tokenOwner);
         emit Transfer(_tokenId, "Transfer", 0, tokenOwner, msg.sender);
     }
 
