@@ -1,4 +1,4 @@
-const { Transfer } = require("../mongoose/schema");
+const { Transfer } = require("../model/schema");
 
 module.exports.create = async (transfer) => {
     try {

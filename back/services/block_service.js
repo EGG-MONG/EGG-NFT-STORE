@@ -1,4 +1,4 @@
-const { Block } = require("../mongoose/schema");
+const { Block } = require("../model/schema");
 
 module.exports.create = async (block) => {
     try {

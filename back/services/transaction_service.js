@@ -1,4 +1,4 @@
-const { Transaction } = require("../mongoose/schema");
+const { Transaction } = require("../model/schema");
 
 module.exports.create = async (transaction) => {
     try {

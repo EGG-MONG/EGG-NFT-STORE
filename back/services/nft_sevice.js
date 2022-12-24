@@ -1,4 +1,4 @@
-const { Nft } = require("../mongoose/schema");
+const { Nft } = require("../model/schema");
 
 module.exports.create = async (nft) => {
   try {

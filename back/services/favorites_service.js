@@ -23,12 +23,12 @@ module.exports.getList = async (wallet) => {
     }
 }
 
-module.exports.update = async (wallet, favorites) => {
-    try {
-        //                      filter , update     
-        return Favorites.update({wallet}, {favorites});
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
-}
+// module.exports.update = async (wallet, favorites) => {
+//     try {
+//         //                      filter , update     
+//         return Favorites.update({wallet}, {favorites});
+//     } catch (error) {
+//         console.error(error);
+//         return false;
+//     }
+// }
