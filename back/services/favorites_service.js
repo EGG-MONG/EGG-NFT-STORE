@@ -1,4 +1,4 @@
-const { Favorites } = require("../mongoose/schema");
+const { Favorites } = require("../model/schema");
 
 module.exports.insertOrUpdate = async (favoritesObj) => {
     try {

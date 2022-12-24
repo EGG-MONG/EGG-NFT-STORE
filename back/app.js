@@ -6,7 +6,7 @@ const cors = require("cors");
 
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-const db = require("./mongoose/connect.js"); // db 불러오기
+const db = require("./model/connect.js"); // db 불러오기
 db();
 
 // 테스트 코드. 지울 것.
