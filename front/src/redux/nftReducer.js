@@ -1,9 +1,8 @@
 import { NftAPI, SUCCESS } from "../api";
-import { LIST, ADD, MODIFY } from './common';
+import { LIST, ADD, MODIFY, MAKER } from './common';
 import produce from 'immer';
 
 function getNftList() {
-
   return async (dispatch, getState) => {
 
     const result = await NftAPI.getNftAll();
@@ -16,18 +15,69 @@ function getNftList() {
   };
 }
 
-function addNft(_nftJsonObj, _transaction, _transfer){
+function addNft(_tokenURI, _transaction, _transfer){
   return async (dispatch, getState) => {
-    const result = await NftAPI.addNft(_nftJsonObj, _transaction, _transfer);
+    
+    const nftJsonStr = await NftAPI.getTokenURI(_tokenURI);
+
+    console.log({nftJsonStr});
+
+    let nft = JSON.parse(nftJsonStr);
+
+    // nft스키마에서 사용하지 않는 dna, compiler 삭제
+    nft = deleteNftAttr(nft);
+
+    // nft스키마에 사용하는 속성 값 삽입
+    nft = addNftAttr({_nft : nft, _tokenURI, _transaction, _transfer});
+    
+    
+    const result = await NftAPI.addNft(nft, _transaction, _transfer);
 
     if (result?.ret === SUCCESS) {
-      // dispatch({ type: LIST, payload: { nftList } });
+      dispatch({ type: ADD, payload: { nft } });
     }
   }
 }
 
+function modifyNft(_tokenId, _nft){
+  return async (dispatch, getState) => {
+    const result = await NftAPI.modifyNft(_tokenId, _nft);
+    
+    if (result?.ret === SUCCESS) {
+      const nft = result.nft;
+      dispatch({ type: MODIFY, payload: { nft } });
+    }
+  };
+}
 
-export { getNftList, };
+function deleteNftAttr(_nft){
+  const nft = {..._nft};
+  delete nft.dna;
+  delete nft.compiler;
+  return nft;
+}
+
+function addNftAttr({_ntf, _tokenURI, _transaction, _transfer}){
+  const nft = {..._ntf};
+
+  nft.tokenId = _transfer.tokenId;
+  nft.owner = _transfer.to;
+  nft.state = _transfer.state;
+  nft.price = _transfer.price;
+  
+  nft.maker = MAKER;
+
+  nft.uri = _tokenURI;
+
+  nft.transactions = [_transaction];
+
+  nft.transfer = [_transfer];
+
+  return nft;
+}
+
+
+export { getNftList, addNft, modifyNft};
 
 const init = {
     list : []
@@ -46,7 +96,12 @@ function nft(state = init, action) {
             });
         case MODIFY:
             return produce(state, draft => {
-              draft.list.push(payload.nft);
+              const nft = payload.nft;
+              const list = draft.list.map(item => {
+                if(item.tokenId === nft.tokenId) return nft
+                else return item;
+              });
+              draft.list = list;
             });
         default:
             return state;
