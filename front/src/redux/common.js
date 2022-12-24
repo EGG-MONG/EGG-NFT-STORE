@@ -1,11 +1,18 @@
-const ADD = "ADD";
-const MODIFY = "MODIFY";
-const READ = "READ";
-const DELETE = "DELETE";
-const LIST = "LIST";
-const MAKER = "EGG-Mong";
+const NFT_ADD = "NFT_ADD";
+const NFT_LIST = "NFT_LIST";
+const NFT_MODIFY = "NFT_MODIFY";
+const NFT_MAKER = "NFT_EGG-Mong";
 
 
-export { 
-            ADD, MODIFY, READ, DELETE, LIST, MAKER
-        };
+const FAVORITES_MODIFY = "FAVORITES_MODIFY";
+const FAVORITES_LIST = "FAVORITES_LIST";
+
+const CONTRACT_GET = "CONTRACT_GET";
+const ACCOUT_CHANGE = "ACCOUT_CHANGE";
+
+
+export {    
+    FAVORITES_MODIFY, FAVORITES_LIST,
+    NFT_ADD, NFT_LIST, NFT_MODIFY, NFT_MAKER,
+    CONTRACT_GET, ACCOUT_CHANGE,
+};

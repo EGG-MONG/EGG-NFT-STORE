@@ -1,74 +1,72 @@
 import { FavoritesAPI, SUCCESS } from "../api";
-import { LIST, MODIFY } from './common';
+import { FAVORITES_MODIFY, FAVORITES_LIST, } from "./common";
 import produce from 'immer';
 
-
-
-function addFavorites(_wallet, _favorites){
+function addFavorite(_account, _favorites, _tokenId){
   return async (dispatch, getState) => {
-
-    const result = await NftAPI.MODIFY(_wallet, _favorites);
+    const favorites = _favorites;
+    favorites.push(_tokenId);
+    const result = await FavoritesAPI.modify(_account, favorites);
 
     if (result?.ret === SUCCESS) {
-      dispatch({ type: ADD, payload: { nft } });
+      dispatch({ type: FAVORITES_MODIFY, payload: { favorites } });
     }
   }
 }
 
-function getFavoritesList() {
+function getFavoritesList(_account) {
   return async (dispatch, getState) => {
 
-    const result = await FavoritesAPI.getAll(_wallet);
+    const result = await FavoritesAPI.getAll(_account);
 
     if (result?.ret === SUCCESS) {
-      const { wallet, favorites } = result;
-      dispatch({ type: LIST, payload: { wallet, favorites } });
+      const { account, favorites } = result;
+      dispatch({ type: FAVORITES_LIST, payload: { account, favorites } });
+    }else{
+      const account = _account;
+      const favorites = [];
+      dispatch({ type: FAVORITES_LIST, payload: { account, favorites } });
     }
   };
 }
 
-function deleteFavorites(_wallet, _favorites){
+function deleteFavorites(_account, _favorites, _tokenId){
   return async (dispatch, getState) => {
 
-    const result = await FavoritesAPI.modify(_wallet, _favorites);
+    const favorites = _favorites.map(item => {
+      if(item !== _tokenId) return item;
+    })
+    const result = await FavoritesAPI.modify(_account, favorites);
     
     if (result?.ret === SUCCESS) {
       const nft = result.nft;
-      dispatch({ type: MODIFY, payload: { _wallet, _favorites } });
+      dispatch({ type: FAVORITES_MODIFY, payload: { favorites } });
     }
   };
 }
 
-export { addFavorites, getFavoritesList, deleteFavorites};
+export { addFavorite, getFavoritesList, deleteFavorites};
 
 const init = {
-    wallet : null,
+    account : null,
     favorites : []
 }
 
-function nft(state = init, action) {
+function favorites(state = init, action) {
     const {type, payload} = action;
     switch (type) {
-        case LIST:
+        case FAVORITES_MODIFY:
             return produce(state, draft => {
               draft.favorites = payload.favorites;
             });
-        case ADD:
+        case FAVORITES_LIST:
             return produce(state, draft => {
-              draft.favorites.push(payload.nft);
-            });
-        case MODIFY:
-            return produce(state, draft => {
-              const nft = payload.nft;
-              const favorites = draft.favorites.map(item => {
-                if(item.tokenId === nft.tokenId) return nft
-                else return item;
-              });
-              draft.favorites = favorites;
+              draft.account = payload.account;
+              draft.favorites = payload.favorites;
             });
         default:
             return state;
     }
 }
 
-export default nft;
+export default favorites;

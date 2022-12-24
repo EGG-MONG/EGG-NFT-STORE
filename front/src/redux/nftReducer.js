@@ -1,5 +1,5 @@
 import { NftAPI, SUCCESS } from "../api";
-import { LIST, ADD, MODIFY, MAKER } from './common';
+import { NFT_LIST, NFT_ADD, NFT_MODIFY, NFT_MAKER } from './common';
 import produce from 'immer';
 
 function addNft(_tokenURI, _transaction, _transfer){
@@ -21,7 +21,7 @@ function addNft(_tokenURI, _transaction, _transfer){
     const result = await NftAPI.add(nft, _transaction, _transfer);
 
     if (result?.ret === SUCCESS) {
-      dispatch({ type: ADD, payload: { nft } });
+      dispatch({ type: NFT_ADD, payload: { nft } });
     }
   }
 }
@@ -33,7 +33,7 @@ function getNftList() {
 
     if (result?.ret === SUCCESS) {
       const list = result?.list;
-      dispatch({ type: LIST, payload: { list } });
+      dispatch({ type: NFT_LIST, payload: { list } });
     }
   };
 }
@@ -44,7 +44,7 @@ function modifyNft(_tokenId, _nft){
     
     if (result?.ret === SUCCESS) {
       const nft = result.nft;
-      dispatch({ type: MODIFY, payload: { nft } });
+      dispatch({ type: NFT_MODIFY, payload: { nft } });
     }
   };
 }
@@ -64,7 +64,7 @@ function addNftAttr({_ntf, _tokenURI, _transaction, _transfer}){
   nft.state = _transfer.state;
   nft.price = _transfer.price;
   
-  nft.maker = MAKER;
+  nft.maker = NFT_MAKER;
 
   nft.uri = _tokenURI;
 
@@ -86,15 +86,15 @@ function nft(state = init, action) {
     const {type, payload} = action;
     switch (type) {
 
-        case ADD:
+        case NFT_ADD:
             return produce(state, draft => {
               draft.list.push(payload.nft);
             });
-        case LIST:
+        case NFT_LIST:
             return produce(state, draft => {
               draft.list = payload.list;
             });
-        case MODIFY:
+        case NFT_MODIFY:
             return produce(state, draft => {
               const nft = payload.nft;
               const list = draft.list.map(item => {

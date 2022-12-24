@@ -1,7 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 
-const MyPage = ({ web3, account }) => {
+const MyPage = (/*{ web3, account }*/) => {
+  const web3 = useSelector((state) => state.web3.web3);
+  const account = useSelector((state) => state.web3.account);
+
   if (!account) return <Address>메타마스크를 연결해주세요</Address>;
 
   return (

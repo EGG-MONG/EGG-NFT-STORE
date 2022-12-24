@@ -1,5 +1,9 @@
 import { combineReducers } from "redux";
-import block from "./blockReducer";
+
+import nft from "./nftReducer";
+import contract from "./contractReducer";
+import favorites from "./favoritesReducer";
+
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage/session"; // session storage
 // import storage from "redux-persist/lib/storage" // local storage
@@ -7,9 +11,9 @@ import storage from "redux-persist/lib/storage/session"; // session storage
 const persistConfig = {
     key: "react",
     storage,
-    whitelist: ['block' ]
+    whitelist: ['nft', 'contract', 'favorites' ]
 };
 
-const rootReducer = combineReducers({ block, });
+const rootReducer = combineReducers({ nft, contract, favorites});
 
 export default persistReducer(persistConfig, rootReducer);

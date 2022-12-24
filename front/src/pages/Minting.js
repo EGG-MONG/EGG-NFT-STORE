@@ -1,29 +1,47 @@
 import styled from "styled-components";
 import EggToken from "../contracts/EggToken.json";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getContract } from "../redux/contractReducer";
 
-const Minting = ({ web3, account }) => {
-  const [deployed, setDeployed] = useState(null);
-  console.log(web3);
+const Minting = (/*{ web3, account }*/) => {
+  const dispatch = useDispatch();
+  const web3 = useSelector((state) => state.contract.web3);
+  const account = useSelector((state) => state.contract.account);
+  const eggToken = useSelector((state) => state.contract.eggToken);
+  const saleContract = useSelector((state) => state.contract.saleContract);
+  
+
+  // const [deployed, setDeployed] = useState(null);
 
   const minting = async () => {
-    const result = await deployed.methods.mintToken().send({ from: account });
+    const result = await eggToken.deployed.methods.mintToken(saleContract.CA, 1).send({ from: account, value : 100 });
     console.log(result);
   };
 
   useEffect(() => async () => {
-    if (deployed) return;
-    const networkId = await web3.eth.net.getId();
+    // if (deployed) return;
 
-    const CA = EggToken.networks[networkId].address;
-    console.log(CA);
+    if(!eggToken.CA){
+      dispatch(getContract());
+    }
 
-    const { abi } = EggToken;
+    console.log({web3, account});
+    console.log({eggToken});
+    console.log({saleContract});
 
-    const Deployed = new web3.eth.Contract(abi, CA);
-    console.log(Deployed);
+    // const networkId = await web3.eth.net.getId();
+    // console.log({networkId});
+    // const CA = EggToken.networks[networkId].address;
+    // console.log({CA});
 
-    web3.eth.subscribe("logs", { address: CA }).on("data", (log) => {
+    // const { abi } = EggToken;
+
+    
+    // const Deployed = new web3.eth.Contract(abi, CA);
+    // console.log({Deployed});
+
+    web3.eth.subscribe("logs", { address: eggToken.CA }).on("data", (log) => {
       const params = [{ type: "uint256", name: "count" }];
       const value = web3.eth.abi.decodeLog(params, log.data);
       console.log(value);
