@@ -17,7 +17,7 @@ app.listen(
   8000,
   /*async*/ () => {
     console.log("서버 연결");
-    test.test();
+    // test.test();
     // 테스트 코드. 지울 것.
     // const result = await TransferService.create({nftId : 11, transactionHash : "transactionHash",type : "type",  price : 1, from : "from", to : "to" })
     // console.log(result);
