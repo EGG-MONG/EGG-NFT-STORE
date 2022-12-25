@@ -1,11 +1,13 @@
 import NavBar from "./components/NavBar";
-import useWeb3 from "../src/hooks/useWeb3";
+import useContractEvent from "./hooks/useContractEvent";
 import { Routes, Route } from "react-router-dom";
 import { Minting, MyPage, Shop, Detail } from "./pages";
+import useWeb3 from "./hooks/useWeb3";
 
 function App() {
+  // account 변경, 솔리디티 log 이벤트 구독 등 
+  // useContractEvent();
   // const [web3, account] = useWeb3();
-  useWeb3();
 
   return (
     <div className="App">
