@@ -7,7 +7,7 @@ module.exports = async function (deployer) {
     // 토큰 정보
     const name = "EggToken";
     const symbol = "ETK"
-    const metadataURI = "https://gateway.pinata.cloud/ipfs/QmPhbUs1qkBuh4rakLbyGR256DtkmdYCEnjXecdWxg2F8T/";
+    const metadataURI = "http://localhost:8000/metadatas";
 
     // 토큰 먼저 배포
     await deployer.deploy(EggToken, name, symbol, metadataURI);
