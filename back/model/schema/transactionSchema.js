@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const transactionSchema = new mongoose.Schema({
-    transactionIndex : {type : Number, index : true, unique : true},
+    // transactionIndex : {type : Number, index : true, unique : true},
     hash : {type : String, index : true, unique : true},
     nonce : Number,
     blockHash : String,

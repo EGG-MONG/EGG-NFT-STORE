@@ -1,8 +1,7 @@
-const express = require("express");
+const FavoriteController = require("./favorites_controller");
+const NftController = require("./nft_controller");
 
-const router = express.Router();
-
-const BlockController = require("../controllers/block_controller");
-const FavoriteController = require("../controllers/favorites_controller");
-
-module.exports = router;
+module.exports = {
+    FavoriteController,
+    NftController,
+}

@@ -1,5 +1,5 @@
 const BlockService = require("./block_service");
-const TransactionService = require("./block_service");
+const TransactionService = require("./transaction_service");
 const TransferService = require("./transfer_service");
 const NftService = require("./nft_sevice");
 const FavoritesService = require("./favorites_service");

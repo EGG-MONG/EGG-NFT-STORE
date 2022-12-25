@@ -13,11 +13,11 @@ module.exports.insertOrUpdate = async (req, res) => {
 };
 
 module.exports.getList = async (req, res) => {
-
-    const blockList = await FavoritesService.getList();
+    const { account } = req.param;
+    const favorites = await FavoritesService.getList( account );
     
-    if(blockList){
-      res.send({ret : SUCCESS,  blockList });
+    if(favorites){
+      res.send({ret : SUCCESS,  favorites });
     }else{
       res.send({ret : FAIL});
     }

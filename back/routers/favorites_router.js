@@ -2,10 +2,10 @@ const express = require("express");
 
 const router = express.Router();
 
-const BlockController = require("../controllers");
+const {FavoriteController} = require("../controllers");
 
-router.get("/block", BlockController.get);
+router.post("/", FavoriteController.insertOrUpdate);
 
-router.get("/blocks", BlockController.getList);
+router.get("/:accout", FavoriteController.getList);
 
 module.exports = router;

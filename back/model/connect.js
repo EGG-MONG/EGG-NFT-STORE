@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 module.exports = () => {
   function connect() {
-    mongoose.connect('mongodb://localhost:27017', { dbName: 'egg_nft_test' }, function(err) {
+    mongoose.connect('mongodb://127.0.0.1:27017', { dbName: 'egg_nft_test' }, function(err) {
       if (err) {
         console.error('mongodb connection error', err);
       }
