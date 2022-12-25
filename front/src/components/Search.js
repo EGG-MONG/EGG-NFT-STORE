@@ -5,7 +5,7 @@ const Search = () => {
   return (
     <>
       <SearchBar />
-      <SearchButton>SERACH</SearchButton>
+      <SearchButton>SEARCH</SearchButton>
     </>
   );
 };
@@ -26,5 +26,6 @@ const SearchButton = styled.button`
   border: 1px solid gray;
   border-top-right-radius: 1rem;
   border-bottom-right-radius: 1rem;
+  background: transparent;
 `;
 export default Search;

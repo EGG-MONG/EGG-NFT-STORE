@@ -39,7 +39,6 @@ function deleteFavorites(_account, _favorites, _tokenId){
     const result = await FavoritesAPI.modify(_account, favorites);
     
     if (result?.ret === SUCCESS) {
-      const nft = result.nft;
       dispatch({ type: FAVORITES_MODIFY, payload: { favorites } });
     }
   };

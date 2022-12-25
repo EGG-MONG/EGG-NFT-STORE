@@ -1,11 +1,9 @@
-import Search from "../components/Search";
-import Paging from "../components/Paging";
-import styled from "styled-components";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import styled from "styled-components";
+import Paging from "./Paging";
 
-const Shop = () => {
-  // 페이지 네이션
+const FavoriteNft = () => {
   const [items, setItems] = useState([
     { id: 1, title: "example-NFT", price: 10 },
     { id: 1, title: "example-NFT", price: 10 },
@@ -24,14 +22,9 @@ const Shop = () => {
 
   const offset = (page - 1) * limit;
 
-  useEffect(() => {}, []);
-
   return (
     <>
-      <SearchWrap>
-        <Search />
-      </SearchWrap>
-      <ListWrap>
+      <MainContainer>
         <ItemsWrap>
           {items.slice(offset, offset + limit).map(({ id, title, price }) => (
             <Cards key={id}>
@@ -42,14 +35,14 @@ const Shop = () => {
                 </ItemTitle>
                 <div>{price} ETH</div>
                 <BtnWrap>
-                  <Btn>CART</Btn>
                   <Btn>BUY</Btn>
+                  <Btn>UNLIKE</Btn>
                 </BtnWrap>
               </div>
             </Cards>
           ))}
         </ItemsWrap>
-      </ListWrap>
+      </MainContainer>
       <Paging
         total={items.length}
         limit={limit}
@@ -60,22 +53,14 @@ const Shop = () => {
   );
 };
 
-const SearchWrap = styled.div`
-  width: inherit;
-  height: inherit;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 1.3rem;
-`;
-
-const ListWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const MainContainer = styled.div`
+  width: 93vw;
+  height: 78vh;
+  background-color: rgba(243, 182, 243, 0.2); ;
 `;
 
 const ItemsWrap = styled.div`
+  padding-top: 2rem;
   text-align: center;
   display: grid;
   align-content: center;
@@ -98,6 +83,7 @@ const Cards = styled.div`
   height: 21rem;
   border: 1px solid #d9d9d9;
   border-radius: 1rem;
+  background-color: white;
 
   > img {
     width: 200px;
@@ -126,4 +112,4 @@ const Btn = styled.button`
     color: white;
   }
 `;
-export default Shop;
+export default FavoriteNft;

@@ -8,3 +8,25 @@ module.exports.create = async (nft) => {
     return false;
   }
 };
+
+module.exports.update = async (nft) => {
+  // console.log(nft);
+  try {
+    await Nft.findOneAndUpdate(
+      {
+        tokenId: tokenId,
+      },
+      {
+        $push: {
+          nft: {
+            tokenId: tokenId,
+          },
+        },
+      },
+      { new: true }
+    );
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};

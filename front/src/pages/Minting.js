@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import EggToken from "../contracts/EggToken.json";
+import SaleContract from "../contracts/SaleContract.json";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getContract } from "../redux/contractReducer";
@@ -44,7 +45,10 @@ const Minting = (/*{ web3, account }*/) => {
     web3.eth.subscribe("logs", { address: eggToken.CA }).on("data", (log) => {
       const params = [{ type: "uint256", name: "count" }];
       const value = web3.eth.abi.decodeLog(params, log.data);
-      console.log(value);
+
+      //   console.log({ tokenId: value.tokenId });
+      //   console.log({ state: value.state });
+      //   console.log(value);
     });
   });
 
@@ -57,6 +61,7 @@ const Minting = (/*{ web3, account }*/) => {
           onClick={minting}
           style={{ width: "700px", cursor: "pointer" }}
         />
+        <Price>only 100wei</Price>
       </MintingArea>
     </>
   );
@@ -68,7 +73,13 @@ const MintingArea = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 2rem;
+  margin-top: 1rem;
 `;
 
+const Price = styled.h1`
+  font-size: 3rem;
+  &:hover {
+    color: plum;
+  }
+`;
 export default Minting;

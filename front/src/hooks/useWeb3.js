@@ -18,14 +18,23 @@ const useWeb3 = () => {
       const [address] = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-      // 계정의 값으로 state값 변경.
-      // setAccount(address);
+
+      window.ethereum.on("accountsChanged", (account) => {
+        // console.log({ accountsChanged: account });
+        // setAccount(account);
+      });
+
+      window.ethereum.on("disconnect", (account) => {
+        // console.log({ disconnect: account });
+        // setAccount(account);
+      });
+
       const web3 = new Web3(window.ethereum);
       // setWeb3(web3);
-      const account = address;
-      dispatch({ type: CONTRACT_GET, payload: { web3, account } });
+      // setAccount(address);
     })();
   }, []);
+
   // return [web3, account];
 };
 
