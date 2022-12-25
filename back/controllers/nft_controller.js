@@ -22,6 +22,7 @@ module.exports.update = async (req, res) => {
 
   const nft = await NftService.get(tokenId);
 
+  nft.state = transfer.state;
   // 트랜젝션과 트랜스퍼 배열에 추가
   nft.transactions.push(transaction);
   nft.transfers.push(transfer);
