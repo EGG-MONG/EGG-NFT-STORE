@@ -1,7 +1,7 @@
 {
   "name": "Egg Token #78",
   "description": "Egg Token Collection",
-  "image": "http://localhst:8000/images/78.png",
+  "image": "http://localhost:8000/images/78.png",
   "dna": "d2df072d6cdcfc63ec171701f53f918c7ff8cf53",
   "edition": 78,
   "date": 1671982375915,
