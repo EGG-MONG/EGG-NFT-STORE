@@ -1,0 +1,39 @@
+{
+  "name": "Egg Token #46",
+  "description": "Egg Token Collection",
+  "image": "http://localhst:8000/images/46.png",
+  "dna": "54b33ee917e0c9f8c0eb5202a7901d931dfdd7fb",
+  "edition": 46,
+  "date": 1671982373291,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Pink"
+    },
+    {
+      "trait_type": "Border",
+      "value": "Black"
+    },
+    {
+      "trait_type": "Egg background",
+      "value": "White"
+    },
+    {
+      "trait_type": "Pattern",
+      "value": "Blue"
+    },
+    {
+      "trait_type": "Eye",
+      "value": "None"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "None"
+    },
+    {
+      "trait_type": "Shadow",
+      "value": "Right"
+    }
+  ],
+  "compiler": "HashLips Art Engine"
+}

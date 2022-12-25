@@ -1,0 +1,39 @@
+{
+  "name": "Egg Token #65",
+  "description": "Egg Token Collection",
+  "image": "http://localhst:8000/images/65.png",
+  "dna": "7858610cb9e3bde21902b51916f76ddaf93c74f7",
+  "edition": 65,
+  "date": 1671982374844,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Green"
+    },
+    {
+      "trait_type": "Border",
+      "value": "Black"
+    },
+    {
+      "trait_type": "Egg background",
+      "value": "White"
+    },
+    {
+      "trait_type": "Pattern",
+      "value": "Pink"
+    },
+    {
+      "trait_type": "Eye",
+      "value": "None"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "None"
+    },
+    {
+      "trait_type": "Shadow",
+      "value": "Left"
+    }
+  ],
+  "compiler": "HashLips Art Engine"
+}

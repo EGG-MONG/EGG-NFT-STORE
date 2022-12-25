@@ -1,0 +1,39 @@
+{
+  "name": "Egg Token #92",
+  "description": "Egg Token Collection",
+  "image": "http://localhst:8000/images/92.png",
+  "dna": "014a64b1a55dbf3c4a394bbc0a45f4f62dd3b5e6",
+  "edition": 92,
+  "date": 1671982377069,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Green"
+    },
+    {
+      "trait_type": "Border",
+      "value": "Black"
+    },
+    {
+      "trait_type": "Egg background",
+      "value": "White"
+    },
+    {
+      "trait_type": "Pattern",
+      "value": "Blue"
+    },
+    {
+      "trait_type": "Eye",
+      "value": "None"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Cry"
+    },
+    {
+      "trait_type": "Shadow",
+      "value": "Right"
+    }
+  ],
+  "compiler": "HashLips Art Engine"
+}
