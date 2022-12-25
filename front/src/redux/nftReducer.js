@@ -4,24 +4,24 @@ import produce from 'immer';
 
 function addNft(_tokenURI, _transaction, _transfer){
   return async (dispatch, getState) => {
-    
-    const nftJsonStr = await NftAPI.getTokenURI(_tokenURI);
+    console.log({_tokenURI});
+    // const nft = await NftAPI.getNftJson(_tokenURI);
 
-    console.log({nftJsonStr});
+    // console.log(nftJsonStr);
 
-    let nft = JSON.parse(nftJsonStr);
-
+    let nft = await NftAPI.getNftJson(_tokenURI);
+    console.log({nft});
     // nft스키마에서 사용하지 않는 dna, compiler 삭제
     nft = deleteNftAttr(nft);
 
     // nft스키마에 사용하는 속성 값 삽입
     nft = addNftAttr({_nft : nft, _tokenURI, _transaction, _transfer});
-    
+    console.log({nft});
     
     const result = await NftAPI.add(nft, _transaction, _transfer);
 
     if (result?.ret === SUCCESS) {
-      dispatch({ type: NFT_ADD, payload: { nft } });
+      dispatch({ type: NFT_ADD, payload: { nft : result.nft } });
     }
   }
 }
@@ -38,9 +38,9 @@ function getNftList() {
   };
 }
 
-function modifyNft(_tokenId, _nft){
+function modifyNft(_tokenId, _transaction, _transfer){
   return async (dispatch, getState) => {
-    const result = await NftAPI.modify(_tokenId, _nft);
+    const result = await NftAPI.modify(_tokenId, _transaction, _transfer);
     
     if (result?.ret === SUCCESS) {
       const nft = result.nft;
@@ -56,21 +56,18 @@ function deleteNftAttr(_nft){
   return nft;
 }
 
-function addNftAttr({_ntf, _tokenURI, _transaction, _transfer}){
-  const nft = {..._ntf};
-
-  nft.tokenId = _transfer.tokenId;
-  nft.owner = _transfer.to;
-  nft.state = _transfer.state;
-  nft.price = _transfer.price;
-  
-  nft.maker = NFT_MAKER;
-
-  nft.uri = _tokenURI;
-
-  nft.transactions = [_transaction];
-
-  nft.transfer = [_transfer];
+function addNftAttr({_nft, _tokenURI, _transaction, _transfer}){
+  const nft = {
+    ... _nft,
+    tokenId : _transfer.tokenId,
+    owner : _transfer.to,
+    state : _transfer.state,
+    price : _transfer.price,
+    maker :  NFT_MAKER,
+    uri : _tokenURI,
+    transactions : [_transaction],
+    transfers : [_transfer]
+  };
 
   return nft;
 }

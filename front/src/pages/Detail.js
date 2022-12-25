@@ -1,21 +1,27 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const Detail = () => {
+  const location = useLocation();
+  const nft = location.state.item;
   return (
     <>
       <EntireWrap>
         <InfoWrap>
           <div>
-            <DetailImg src="/Img/egg_1.png" alt="sellingItems" />
+            <DetailImg src={nft.image} alt="sellingItems" />
           </div>
           <div>
-            <NftTitle>NFT-TEST-NAME</NftTitle>
+            <NftTitle>{nft.name}</NftTitle>
             <OwnerArea>
-              Owned by <OwnerName>Owner</OwnerName>
+              Owned by <OwnerName>{nft.owner}</OwnerName>
             </OwnerArea>
-            <PriceBox>0.5ETH</PriceBox>
-            <IconBox>
+            <OwnerArea>
+              Maker by <OwnerName>{nft.maker}</OwnerName>
+            </OwnerArea>
+            <PriceBox>{nft.price}Wei</PriceBox>
+            {/* <IconBox>
               <span>
                 <img src="/view.png" alt="icon" />
                 &nbsp;views
@@ -24,7 +30,7 @@ const Detail = () => {
                 <img src="/like.png" alt="icon" />
                 &nbsp;likes
               </span>
-            </IconBox>
+            </IconBox> */}
             <BtnBox>
               <Button>Buy</Button>
               <Button>cart</Button>
@@ -36,9 +42,36 @@ const Detail = () => {
         <DetailWrap>
           <ul>
             <li>ABOUT</li>
+            {nft.description}<br/><br/>
             <li>PROPERTIES</li>
-            <li>DETAIL</li>
+            {
+              nft.attributes.map(item => (
+                <>{item.trait_type} : {item.value} <br/></>
+              ))
+            }<br/>
             <li>TRANSFER</li>
+            <table>
+                <thead>
+                <tr>
+                  <th>state</th>
+                  <th>price</th>
+                  <th>from</th>
+                  <th>to</th>
+                  <th>date</th>
+                </tr>
+                </thead>
+                {
+                  nft.transfers.map(item => (
+                      <tr>
+                        <td>{item.state}</td>
+                        <td>{item.price}</td>
+                        <td>{item.from == "0x0000000000000000000000000000000000000000" ? "" : item.from }</td>
+                        <td>{item.to == "0x0000000000000000000000000000000000000000" ? "" : item.to }</td>
+                        <td>{item.createdAt}</td>
+                      </tr>
+                  ))
+                }
+            </table>
           </ul>
         </DetailWrap>
       </EntireWrap>

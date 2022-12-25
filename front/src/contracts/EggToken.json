@@ -29348,12 +29348,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x00545cC6f60a536A09CC3E1EFE67B3dCF158fDb1",
-      "transactionHash": "0x08334afc358f41a6cfafd40397fe3e731fbb1803af3b3f6663cd271a6157d57e"
+      "address": "0x9bEE59e6Cf48d9f4D55f52bE0A0aA335aE9Fe163",
+      "transactionHash": "0x61ab90162397ae201c678ae8582c4fe461ab3cfc28621e2a1c500e99ba6afb92"
     }
   },
   "schemaVersion": "3.4.11",
-  "updatedAt": "2022-12-25T07:27:08.940Z",
+  "updatedAt": "2022-12-25T15:58:56.868Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

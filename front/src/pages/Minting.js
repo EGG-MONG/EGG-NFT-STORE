@@ -1,7 +1,4 @@
 import styled from "styled-components";
-// import EggToken from "../contracts/EggToken.json";
-// import SaleContract from "../contracts/SaleContract.json";
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getContract } from "../redux/contractReducer";
 

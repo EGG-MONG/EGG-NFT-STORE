@@ -16375,12 +16375,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0xCc879660bF3c4a2043725E493Fd6d650446A7Dd0",
-      "transactionHash": "0xc578660672311b2e45bb80e3d3c97a042c5d088ea1c0b8f71cb784912da55fc1"
+      "address": "0xe7cC773D9A03eC28DE31724fac5FaEcA692e3Fb3",
+      "transactionHash": "0x40621aa202fc6bbf674ce90c610c86015efa74d200c874aa504c16000a9362b3"
     }
   },
   "schemaVersion": "3.4.11",
-  "updatedAt": "2022-12-25T07:27:08.951Z",
+  "updatedAt": "2022-12-25T15:58:56.880Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

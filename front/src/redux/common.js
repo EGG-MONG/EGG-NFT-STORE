@@ -1,7 +1,7 @@
 const NFT_ADD = "NFT_ADD";
 const NFT_LIST = "NFT_LIST";
 const NFT_MODIFY = "NFT_MODIFY";
-const NFT_MAKER = "NFT_EGG-Mong";
+const NFT_MAKER = "EGG-Mong";
 
 
 const FAVORITES_MODIFY = "FAVORITES_MODIFY";

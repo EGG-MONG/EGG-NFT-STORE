@@ -3,28 +3,39 @@ import Paging from "../components/Paging";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getNftList } from "../redux/nftReducer";
 
 const Shop = () => {
-  // 페이지 네이션
-  const [items, setItems] = useState([
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-  ]);
+
+  const dispatch = useDispatch();
+  const nftList = useSelector((state) => state.nft.list);
+
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
-  const offset = (page - 1) * limit;
+  if(!nftList.length) {
+    dispatch(getNftList());
+    return;
+  }
+  console.log(nftList);
+  // 페이지 네이션
+  // const [items, setItems] = useState([
+  //   { id: 1, title: "example-NFT", price: 10 },
+  //   { id: 1, title: "example-NFT", price: 10 },
+  //   { id: 1, title: "example-NFT", price: 10 },
+  //   { id: 1, title: "example-NFT", price: 10 },
+  //   { id: 1, title: "example-NFT", price: 10 },
+  //   { id: 1, title: "example-NFT", price: 10 },
+  //   { id: 1, title: "example-NFT", price: 10 },
+  //   { id: 1, title: "example-NFT", price: 10 },
+  //   { id: 1, title: "example-NFT", price: 10 },
+  //   { id: 1, title: "example-NFT", price: 10 },
+  //   { id: 1, title: "example-NFT", price: 10 },
+  // ]);
 
-  useEffect(() => {}, []);
+
+  const offset = (page - 1) * limit;
 
   return (
     <>
@@ -33,25 +44,30 @@ const Shop = () => {
       </SearchWrap>
       <ListWrap>
         <ItemsWrap>
-          {items.slice(offset, offset + limit).map(({ id, title, price }) => (
-            <Cards key={id}>
-              <img alt="example" src="/Img/egg_1.png" />
+            {nftList.map((item) => {
+            if(item.price != 0)
+            return (
+            <Cards key={item.tokenId}>
+              <img alt="Egg Token Image" src={item.image} />
               <div>
                 <ItemTitle>
-                  <Link to="/detail">{title}</Link>
+                  <Link to={{
+                    pathname: `/detail/${item.tokenId}`,
+                  }}
+                  state={{ item }}>{item.name}</Link>
                 </ItemTitle>
-                <div>{price} ETH</div>
+                <div>{item.price} ETH</div>
                 <BtnWrap>
                   <Btn>CART</Btn>
                   <Btn>BUY</Btn>
                 </BtnWrap>
               </div>
             </Cards>
-          ))}
+          )})}
         </ItemsWrap>
       </ListWrap>
       <Paging
-        total={items.length}
+        total={nftList.length}
         limit={limit}
         page={page}
         setPage={setPage}

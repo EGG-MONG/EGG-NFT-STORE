@@ -1,49 +1,76 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { getContract } from "../redux/contractReducer";
+import { getNftList } from "../redux/nftReducer";
 import Paging from "./Paging";
 
 const MyNft = () => {
-  const [items, setItems] = useState([
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-    { id: 1, title: "example-NFT", price: 10 },
-  ]);
+
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
   const offset = (page - 1) * limit;
 
+  const dispatch = useDispatch();
+  const nftList = useSelector((state) => state.nft.list);
+  const account = useSelector((state) => state.contract.account);
+  const eggToken = useSelector((state) => state.contract.eggToken);
+  const saleContract = useSelector(state => state.contract.saleContract);
+  
+
+  if(!nftList.length) {
+    dispatch(getNftList());
+    return;
+  }
+  if(!eggToken.CA){
+    dispatch(getContract());
+    return;
+  }
+
+  const buyBtnOnClick = async (nft) => {
+    let price;
+    do {
+      price = prompt('판매하실 가격을 숫자로 적어주세요(단위:Wei)');
+    }while(isNaN(price))
+    
+    // 권한 받기
+    await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
+    
+    const result = await saleContract.deployed.methods.ListFotSaleContract(nft.tokenId, price).send({from: account});
+    console.log(result);
+
+  }
+
   return (
     <>
       <MainContainer>
         <ItemsWrap>
-          {items.slice(offset, offset + limit).map(({ id, title, price }) => (
-            <Cards key={id}>
-              <img alt="example" src="/Img/egg_1.png" />
+          {nftList.map((item) => {
+            if(item.owner == account)
+            return (
+            <Cards key={item.tokenId}>
+              <img alt="Egg Token Image" src={item.image} />
               <div>
                 <ItemTitle>
-                  <Link to="/detail">{title}</Link>
+                  <Link to={{
+                    pathname: `/detail/${item.tokenId}`,
+                  }}
+                  state={{ item }}>{item.name}</Link>
                 </ItemTitle>
-                <div>{price} ETH</div>
+                <div>{item.price} ETH</div>
                 <BtnWrap>
-                  <Btn>SALE</Btn>
+                  <Btn onClick={buyBtnOnClick}>SALE</Btn>
                 </BtnWrap>
               </div>
             </Cards>
-          ))}
+          )})}
+
         </ItemsWrap>
       </MainContainer>
       <Paging
-        total={items.length}
+        total={nftList.length}
         limit={limit}
         page={page}
         setPage={setPage}

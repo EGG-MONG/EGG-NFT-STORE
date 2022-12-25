@@ -4,14 +4,21 @@ import { useDispatch, useSelector } from "react-redux";
 import FavoriteNft from "../components/FavoriteNft";
 import MyNft from "../components/MyNft";
 import UploadedNft from "../components/UploadedNft";
+import { getContract } from "../redux/contractReducer";
 
-const MyPage = (/*{ web3, account }*/) => {
-  const web3 = useSelector((state) => state.web3.web3);
-  const account = useSelector((state) => state.web3.account);
-
-  const menuArr = ["구매한 NFT", "업로드 한 NFT", "즐겨찾기"];
-
+const MyPage = () => {
+  const dispatch = useDispatch();
+  const account = useSelector((state) => state.contract.account);
   const [index, setIndex] = useState(0);
+
+  if(!account){
+    dispatch(getContract());
+    return;
+  }
+
+  const menuArr = ["구매한 NFT", ]; //"업로드 한 NFT", "즐겨찾기"
+
+  
 
   const clickHandler = (idx) => {
     setIndex(idx);
@@ -19,8 +26,8 @@ const MyPage = (/*{ web3, account }*/) => {
 
   const pages = {
     0: <MyNft />,
-    1: <UploadedNft />,
-    2: <FavoriteNft />,
+    // 1: <UploadedNft />,
+    // 2: <FavoriteNft />,
   };
 
   if (!account) return <Address>메타마스크를 연결해주세요</Address>;
