@@ -1,4 +1,4 @@
-import Search from "../components/Search";
+// import Search from "../components/Search";
 import Paging from "../components/Paging";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
@@ -9,7 +9,6 @@ import { getContract } from "../redux/contractReducer";
 import { nftEvent } from "../func/eventProcessing";
 
 const Shop = () => {
-
   const dispatch = useDispatch();
   
   const nftList = useSelector((state) => state.nft.list);
@@ -19,16 +18,22 @@ const Shop = () => {
   const eggToken = useSelector((state) => state.contract.eggToken);
   const saleContract = useSelector(state => state.contract.saleContract);
 
+  // 판매 상태인 애들만 새로운 배열로 만들었음
+  const listed = nftList.filter((item) => {
+    if (item.state === "List") return item;
+  });
+  // console.log(listed);
+
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
-  if(nftList.length === 0) {
+  if (nftList.length === 0) {
     dispatch(getNftList());
   }
   if(!eggToken.CA){
     dispatch(getContract());
   }
-  console.log({nftList});
+  console.log(nftList);
   // 페이지 네이션
   // const [items, setItems] = useState([
   //   { id: 1, title: "example-NFT", price: 10 },
@@ -43,7 +48,6 @@ const Shop = () => {
   //   { id: 1, title: "example-NFT", price: 10 },
   //   { id: 1, title: "example-NFT", price: 10 },
   // ]);
-
 
   const offset = (page - 1) * limit;
 
@@ -68,41 +72,47 @@ const Shop = () => {
 
   return (
     <>
-      <SearchWrap>
+      {/* <SearchWrap>
         <Search />
-      </SearchWrap>
+      </SearchWrap> */}
       <ListWrap>
         <ItemsWrap>
-            {nftList.map((item) => {
-            if(item.price != 0)
-            return (
-            <Cards key={item.tokenId}>
-              <img alt="Egg Token Image" src={item.image} />
-              <div>
-                <ItemTitle>
-                  <Link to={{
-                    pathname: `/detail/${item.tokenId}`,
-                  }}
-                  state={{ item }}>{item.name}</Link>
-                </ItemTitle>
-                <div>{item.price} Wei</div>
-                <BtnWrap>
-                  {/* <Btn>CART</Btn> */}
-                  {
-                    item.owner == account ? 
-                    <Btn disabled>List</Btn> : 
-                    <Btn onClick={()=>{
-                      buyBtnOnClick(item);
-                    }}>BUY</Btn>
-                  }
-                </BtnWrap>
-              </div>
-            </Cards>
-          )})}
+          {listed.slice(offset, offset + limit).map((item) => {
+            if (item.price != 0)
+              return (
+                <Cards key={item.tokenId}>
+                  <img alt="Egg Token Img" src={item.image} />
+                  <div>
+                    <ItemTitle>
+                      <Link
+                        to={{
+                          pathname: `/detail/${item.tokenId}`,
+                        }}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                        state={{ item }}
+                      >
+                        {item.name}
+                      </Link>
+                    </ItemTitle>
+                    <div>{item.price} Wei</div>
+                    <BtnWrap>
+                      {/* <Btn>CART</Btn> */}
+                      {item.owner == account ? (
+                        <Btn disabled>List</Btn>
+                      ) : (
+                        <Btn onClick={()=>{
+                          buyBtnOnClick(item);
+                        }}>BUY</Btn>
+                      )}
+                    </BtnWrap>
+                  </div>
+                </Cards>
+              );
+          })}
         </ItemsWrap>
       </ListWrap>
       <Paging
-        total={nftList.length}
+        total={listed.length}
         limit={limit}
         page={page}
         setPage={setPage}
@@ -111,14 +121,14 @@ const Shop = () => {
   );
 };
 
-const SearchWrap = styled.div`
-  width: inherit;
-  height: inherit;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 1.3rem;
-`;
+// const SearchWrap = styled.div`
+//   width: inherit;
+//   height: inherit;
+//   display: flex;
+//   justify-content: flex-start;
+//   align-items: center;
+//   padding: 1.3rem;
+// `;
 
 const ListWrap = styled.div`
   display: flex;
@@ -127,13 +137,14 @@ const ListWrap = styled.div`
 `;
 
 const ItemsWrap = styled.div`
+  padding-top: 2rem;
   text-align: center;
   display: grid;
   align-content: center;
   justify-items: center;
   grid-template-columns: repeat(5, 1fr);
-  column-gap: 1rem;
-  row-gap: 1rem;
+  column-gap: 2rem;
+  row-gap: 2rem;
 `;
 
 const ItemTitle = styled.h1`
@@ -146,13 +157,13 @@ const ItemTitle = styled.h1`
 
 const Cards = styled.div`
   width: 15rem;
-  height: 21rem;
+  height: 22rem;
   border: 1px solid #d9d9d9;
   border-radius: 1rem;
 
   > img {
     width: 200px;
-    margin-top: 1rem;
+    margin: 1rem 0 1rem 0;
   }
 `;
 

@@ -1,78 +1,90 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { table, card } from "react-bootstrap";
 
 const Detail = () => {
   const location = useLocation();
   const nft = location.state.item;
+  console.log(nft.transfers);
   return (
     <>
       <EntireWrap>
         <InfoWrap>
-          <div>
+          <ImageWrap>
             <DetailImg src={nft.image} alt="sellingItems" />
-          </div>
+          </ImageWrap>
           <div>
             <NftTitle>{nft.name}</NftTitle>
             <OwnerArea>
-              Owned by <OwnerName>{nft.owner}</OwnerName>
+              Owned by <OwnerName>&nbsp;{nft.owner}</OwnerName>
             </OwnerArea>
             <OwnerArea>
-              Maker by <OwnerName>{nft.maker}</OwnerName>
+              Maker by <OwnerName>&nbsp;{nft.maker}</OwnerName>
             </OwnerArea>
-            <PriceBox>{nft.price}Wei</PriceBox>
-            {/* <IconBox>
-              <span>
-                <img src="/view.png" alt="icon" />
-                &nbsp;views
-              </span>
-              <span>
-                <img src="/like.png" alt="icon" />
-                &nbsp;likes
-              </span>
-            </IconBox> */}
+            <PriceBox>
+              <span>{nft.price}</span>&nbsp; Wei
+            </PriceBox>
             <BtnBox>
               <Button>Buy</Button>
-              <Button>cart</Button>
-              <Button>Sell(Offer)</Button>
+              <Button>Sell</Button>
             </BtnBox>
           </div>
         </InfoWrap>
 
         <DetailWrap>
-          <ul>
-            <li>ABOUT</li>
-            {nft.description}<br/><br/>
-            <li>PROPERTIES</li>
-            {
-              nft.attributes.map(item => (
-                <>{item.trait_type} : {item.value} <br/></>
-              ))
-            }<br/>
-            <li>TRANSFER</li>
-            <table>
-                <thead>
-                <tr>
-                  <th>state</th>
-                  <th>price</th>
-                  <th>from</th>
-                  <th>to</th>
-                  <th>date</th>
+          <div className="card">
+            <div className="card-header">ABOUT</div>
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item">{nft.description}</li>
+            </ul>
+          </div>
+
+          <div className="card">
+            <div className="card-header">PROPERTIES</div>
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item">
+                {nft.attributes.map((item, idx) => (
+                  <div key={idx}>
+                    {item.trait_type} : {item.value} <br />
+                  </div>
+                ))}
+              </li>
+            </ul>
+          </div>
+          <br />
+          <h1>TRANSFER</h1>
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">state</th>
+                <th scope="col">price</th>
+                <th scope="col">from</th>
+                <th scope="col">to</th>
+                <th scope="col">date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* 여기 for문으로 돌려서(?) 최신순으로 정렬되게 */}
+              {nft.transfers.map((item, idx) => (
+                <tr key={idx}>
+                  <td>{item.state}</td>
+                  <td>{item.price}</td>
+                  <td>
+                    {item.from == "0x0000000000000000000000000000000000000000"
+                      ? ""
+                      : item.from}
+                  </td>
+                  <td>
+                    {item.to == "0x0000000000000000000000000000000000000000"
+                      ? ""
+                      : item.to}
+                  </td>
+                  <td>{item.createdAt}</td>
                 </tr>
-                </thead>
-                {
-                  nft.transfers.map(item => (
-                      <tr>
-                        <td>{item.state}</td>
-                        <td>{item.price}</td>
-                        <td>{item.from == "0x0000000000000000000000000000000000000000" ? "" : item.from }</td>
-                        <td>{item.to == "0x0000000000000000000000000000000000000000" ? "" : item.to }</td>
-                        <td>{item.createdAt}</td>
-                      </tr>
-                  ))
-                }
-            </table>
-          </ul>
+              ))}
+            </tbody>
+          </table>
         </DetailWrap>
       </EntireWrap>
     </>
@@ -89,29 +101,33 @@ const EntireWrap = styled.div`
 
 const InfoWrap = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 5fr);
+  grid-template-columns: 1.5fr 2fr;
   justify-content: center;
   align-items: center;
   column-gap: 2rem;
+`;
 
-  > div:first-child {
-    width: 500px;
-    height: 500px;
-    background-color: #b2b2b2;
-    border-radius: 1rem;
-  }
+const ImageWrap = styled.div`
+  width: 600px;
+  height: 600px;
+  background-color: rgb(234, 234, 234);
+  border-radius: 1rem;
+  display: inherit;
+  justify-items: center;
+  align-content: center;
 `;
 
 const DetailImg = styled.img`
-  width: inherit;
-  height: inherit;
+  width: 550px;
+  height: 550px;
 `;
 
 const NftTitle = styled.h1`
-  font-size: 3rem;
+  font-size: 4rem;
 `;
 
 const OwnerArea = styled.div`
+  font-size: 1.2rem;
   margin-bottom: 1rem;
 `;
 
@@ -123,21 +139,10 @@ const OwnerName = styled.span`
 const PriceBox = styled.div`
   font-size: 2rem;
   margin-bottom: 1rem;
-`;
 
-const IconBox = styled.div`
-  width: 15vw;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
   > span {
-    display: inherit;
-    align-items: center;
-  }
-  > span > img {
-    width: 2rem;
+    font-size: 3rem;
+    color: plum;
   }
 `;
 
@@ -151,7 +156,7 @@ const BtnBox = styled.div`
 
 const Button = styled.button`
   cursor: pointer;
-  width: 10rem;
+  width: 15rem;
   height: 2.5rem;
   font-size: 1.5rem;
   padding-top: 0.3rem;
@@ -168,12 +173,21 @@ const Button = styled.button`
 const DetailWrap = styled.div`
   width: 100vw;
   height: inherit;
-  margin-top: 2rem;
-  > ul {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
+  margin-top: 5rem;
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  > div {
+    width: 80vw;
+    margin-bottom: 2rem;
+  }
+
+  > table {
+    width: 80vw;
+    margin: 2rem 0 7rem 0;
   }
 `;
 
