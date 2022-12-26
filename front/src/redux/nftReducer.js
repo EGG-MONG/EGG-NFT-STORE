@@ -34,7 +34,11 @@ function getNftList() {
 
     if (result?.ret === SUCCESS) {
       const list = result?.list;
-      dispatch({ type: NFT_LIST, payload: { list } });
+      
+      if(getState().nft.list.length !== list.length){
+        dispatch({ type: NFT_LIST, payload: { list } });
+      }
+      
     }
   };
 }
@@ -44,9 +48,12 @@ function modifyNft(_tokenId, _transaction, _transfer) {
     console.log("modifyNft()");
     const result = await NftAPI.modify(_tokenId, _transaction, _transfer);
 
+    console.log(result);
     if (result?.ret === SUCCESS) {
       const nft = result.nft;
       console.log({ nft });
+      const nft = result?.nft;
+      console.log({nft});
       dispatch({ type: NFT_MODIFY, payload: { nft } });
     }
   };

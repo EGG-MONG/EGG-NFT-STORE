@@ -1,4 +1,4 @@
-import { CONTRACT_GET, ACCOUT_CHANGE } from './common';
+import { CONTRACT_GET, ACCOUT_CHANGE, EVENT_CHECK } from './common';
 import produce from 'immer';
 import Web3 from "web3/dist/web3.min";
 import EggToken from "../contracts/EggToken.json";
@@ -6,7 +6,6 @@ import SaleContract from "../contracts/SaleContract.json";
 import { addNft, modifyNft } from "./nftReducer";
 import { ethers } from "ethers";
 
-let eventCheck = false;
 
 function getContract(){
   return async (dispatch, getState) => {
@@ -39,7 +38,7 @@ function getContract(){
     const saleDeployed = new web3.eth.Contract(SaleContract.abi, saleCA);
     console.log({saleDeployed});
     
-    if(!eventCheck) eventSubscribe(dispatch, utils, web3, eggDeployed, saleDeployed);
+    if(!getState().contract.eventCheck) eventSubscribe(dispatch, utils, web3, eggDeployed, saleDeployed);
 
     dispatch({ type: CONTRACT_GET, payload: { web3, account, networkId, eggCA, eggDeployed, saleCA, saleDeployed } });
   }
@@ -63,7 +62,7 @@ async function eventSubscribe(dispatch, utils, web3, eggDeployed, saleDeployed) 
 
   await eggDeployed.events.Minting(() => {
   }).on('data', async function(event){
-
+      console.log({event});
       const tokenURI = init.eggToken.metadataURI+"/"+event.returnValues.tokenId+".json";
       console.log({tokenURI});
 
@@ -72,52 +71,53 @@ async function eventSubscribe(dispatch, utils, web3, eggDeployed, saleDeployed) 
 
       const { tokenId, state, price, from, to } = event.returnValues;
 
-      const transfer = { tokenId, state, price, from, to };
+      const transfer = { id : event.id, tokenId, state, price, from, to };
       console.log({transfer});
       dispatch(addNft(tokenURI, transaction, transfer));
   });
 
-  await saleDeployed.events.List(() => {
-  }).on('data', async function(event){
-      console.log("List");
-      // eventDeployed(event, web3, dispatch);
-      const transaction = await web3.eth.getTransaction(event.transactionHash);
-      console.log({transaction});
+  // await saleDeployed.events.List(() => {
+  // }).on('data', async function(event){
+  //     console.log({event});
+  //     console.log("List");
+  //     // eventDeployed(event, web3, dispatch);
+  //     const transaction = await web3.eth.getTransaction(event.transactionHash);
+  //     console.log({transaction});
   
-      const { tokenId, state, price, from, to } = event.returnValues;
+  //     const { tokenId, state, price, from, to } = event.returnValues;
   
-      const transfer = { tokenId, state, price, from, to };
-      console.log({transfer});
-      dispatch(modifyNft(tokenId, transaction, transfer));
-  });
+  //     const transfer = { id : event.id, tokenId, state, price, from, to };
+  //     console.log({transfer});
+  //     dispatch(modifyNft(tokenId, transaction, transfer));
+  // });
 
-  await saleDeployed.events.Sale(() => {
-  }).on('data', async function(event){
-      // eventDeployed(event, web3, dispatch);
-      const transaction = await web3.eth.getTransaction(event.transactionHash);
-      console.log({transaction});
+  // await saleDeployed.events.Sale(() => {
+  // }).on('data', async function(event){
+  //     // eventDeployed(event, web3, dispatch);
+  //     const transaction = await web3.eth.getTransaction(event.transactionHash);
+  //     console.log({transaction});
   
-      const { tokenId, state, price, from, to } = event.returnValues;
+  //     const { tokenId, state, price, from, to } = event.returnValues;
   
-      const transfer = { tokenId, state, price, from, to };
-      console.log({transfer});
-      dispatch(modifyNft(tokenId, transaction, transfer));
-  });
+  //     const transfer = { id : event.id, tokenId, state, price, from, to };
+  //     console.log({transfer});
+  //     dispatch(modifyNft(tokenId, transaction, transfer));
+  // });
 
-  await saleDeployed.events.Transfer(() => {
-  }).on('data', async function(event){
-      // eventDeployed(event, web3, dispatch);
-      const transaction = await web3.eth.getTransaction(event.transactionHash);
-      console.log({transaction});
+  // await saleDeployed.events.Transfer(() => {
+  // }).on('data', async function(event){
+  //     // eventDeployed(event, web3, dispatch);
+  //     const transaction = await web3.eth.getTransaction(event.transactionHash);
+  //     console.log({transaction});
   
-      const { tokenId, state, price, from, to } = event.returnValues;
+  //     const { tokenId, state, price, from, to } = event.returnValues;
   
-      const transfer = { tokenId, state, price, from, to };
-      console.log({transfer});
-      dispatch(modifyNft(tokenId, transaction, transfer));
-  });
+  //     const transfer = { id : event.id, tokenId, state, price, from, to };
+  //     console.log({transfer});
+  //     dispatch(modifyNft(tokenId, transaction, transfer));
+  // });
 
-  eventCheck = true;
+  dispatch({ type : EVENT_CHECK});
 }
 
 const eventDeployed = async (event, web3, dispatch) => {
@@ -126,7 +126,7 @@ const eventDeployed = async (event, web3, dispatch) => {
 
     const { tokenId, state, price, from, to } = event.returnValues;
 
-    const transfer = { tokenId, state, price, from, to };
+    const transfer = { id : event.id, tokenId, state, price, from, to };
     console.log({transfer});
     dispatch(modifyNft(tokenId, transaction, transfer));
 }
@@ -149,6 +149,7 @@ const init = {
       CA : null,
       deployed : null
     },
+    eventCheck : false,
 }
 
 function contract(state = init, action) {
@@ -170,6 +171,10 @@ function contract(state = init, action) {
             return produce(state, draft => {
               draft.account = payload.account;
             });
+        case EVENT_CHECK:
+            return produce(state, draft => {
+              draft.eventCheck = true;
+            })
         default:
             return state;
     }

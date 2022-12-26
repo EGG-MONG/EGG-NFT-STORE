@@ -4,12 +4,19 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getNftList } from "../redux/nftReducer";
+import { getNftList, modifyNft } from "../redux/nftReducer";
+import { getContract } from "../redux/contractReducer";
+import { nftEvent } from "../func/eventProcessing";
 
 const Shop = () => {
   const dispatch = useDispatch();
-  const account = useSelector((state) => state.contract.account);
+  
   const nftList = useSelector((state) => state.nft.list);
+
+  const account = useSelector((state) => state.contract.account);
+  const web3 = useSelector((state) => state.contract.web3);
+  const eggToken = useSelector((state) => state.contract.eggToken);
+  const saleContract = useSelector(state => state.contract.saleContract);
 
   // 판매 상태인 애들만 새로운 배열로 만들었음
   const listed = nftList.filter((item) => {
@@ -20,10 +27,13 @@ const Shop = () => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
-  if (!nftList.length) {
+  if (nftList.length === 0) {
     dispatch(getNftList());
-    return;
   }
+  if(!eggToken.CA){
+    dispatch(getContract());
+  }
+  console.log(nftList);
   // 페이지 네이션
   // const [items, setItems] = useState([
   //   { id: 1, title: "example-NFT", price: 10 },
@@ -40,6 +50,29 @@ const Shop = () => {
   // ]);
 
   const offset = (page - 1) * limit;
+
+  const buyBtnOnClick = async (nft) => {
+    console.log("buyBtnOnClick");
+    let price;
+    do {
+      price = prompt('구매하실 가격을 판매가 이상으로 숫자로 적어주세요(단위:Wei)');
+
+      if(price == false) break;                                                                                    
+    }while(isNaN(price) || nft.price > price)
+    console.log({price});
+    // 권한 받기
+    await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
+    
+    const result = await saleContract.deployed.methods.PurchaseToken(nft.tokenId).send({from: account, value: price});
+    console.log(result);
+    
+    const sale = await nftEvent(web3, result.events.Sale);
+    dispatch(modifyNft(sale.tokenId, sale.transaction, sale.transfer));
+
+    const transfer = await nftEvent(web3, result.events.Transfer);
+    
+    dispatch(modifyNft(transfer.tokenId, transfer.transaction, transfer.transfer));
+  }
 
   return (
     <>
@@ -71,7 +104,9 @@ const Shop = () => {
                       {item.owner == account ? (
                         <Btn disabled>List</Btn>
                       ) : (
-                        <Btn>BUY</Btn>
+                        <Btn onClick={()=>{
+                          buyBtnOnClick(item);
+                        }}>BUY</Btn>
                       )}
                     </BtnWrap>
                   </div>

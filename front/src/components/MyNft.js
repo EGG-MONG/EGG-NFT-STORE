@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { nftEvent } from "../func/eventProcessing";
 import { getContract } from "../redux/contractReducer";
-import { getNftList } from "../redux/nftReducer";
+import { getNftList, modifyNft } from "../redux/nftReducer";
 import Paging from "./Paging";
 
 const MyNft = () => {
@@ -14,6 +15,7 @@ const MyNft = () => {
 
   const dispatch = useDispatch();
   const nftList = useSelector((state) => state.nft.list);
+  const web3 = useSelector((state) => state.contract.web3);
   const account = useSelector((state) => state.contract.account);
   const eggToken = useSelector((state) => state.contract.eggToken);
   const saleContract = useSelector((state) => state.contract.saleContract);
@@ -21,15 +23,13 @@ const MyNft = () => {
   if (!nftList.length) {
     console.log("!nftList");
     dispatch(getNftList());
-    return;
   }
   if (!eggToken.CA) {
     dispatch(getContract());
-    return;
   }
 
-  const buyBtnOnClick = async (nft) => {
-    console.log("buyBtnOnClick");
+  const saleBtnOnClick = async (nft) => {
+    console.log("saleBtnOnClick");
     let price;
     do {
       price = prompt("판매하실 가격을 숫자로 적어주세요(단위:Wei)");
@@ -41,7 +41,12 @@ const MyNft = () => {
     const result = await saleContract.deployed.methods
       .ListFotSaleContract(nft.tokenId, price)
       .send({ from: account });
-    console.log(result);
+
+    const { tokenId, transaction, transfer } = await nftEvent(
+      web3,
+      result.events.List
+    );
+    dispatch(modifyNft(tokenId, transaction, transfer));
   };
 
   return (
@@ -69,7 +74,7 @@ const MyNft = () => {
                       {item.state != "List" ? (
                         <Btn
                           onClick={() => {
-                            buyBtnOnClick(item);
+                            saleBtnOnClick(item);
                           }}
                         >
                           SALE
