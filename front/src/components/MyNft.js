@@ -20,7 +20,7 @@ const MyNft = () => {
   const eggToken = useSelector((state) => state.contract.eggToken);
   const saleContract = useSelector((state) => state.contract.saleContract);
 
-  if (!nftList.length) {
+  if (nftList.length == 0) {
     console.log("!nftList");
     dispatch(getNftList());
   }
