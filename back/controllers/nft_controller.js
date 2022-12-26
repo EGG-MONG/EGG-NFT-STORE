@@ -18,29 +18,52 @@ module.exports.create = async (req, res) => {
 };
 
 module.exports.update = async (req, res) => {
+  console.log("update()");
   const { tokenId, transaction, transfer } = req.body;
+  console.log({ tokenId, transaction, transfer });
 
   const nft = await NftService.get(tokenId);
 
-  nft.state = transfer.state;
   nft.price = transfer.price;
-  // 트랜젝션과 트랜스퍼 배열에 추가
-  nft.transactions.push(transaction);
-  nft.transfers.push(transfer);
-
-  const nftResult = await NftService.create(nft);
-
-  const txResult = await TransactionService.create(transaction);
-  const trResult = await TransferService.create(transfer);
-
-  console.log({nftResult, txResult, trResult});
-
-  if(nftResult && txResult && trResult){
-    res.send({ret : SUCCESS, nft});
-  }else{
-    res.send({ret : FAIL});
+  nft.state = transfer.state;
+  
+  let txResult;
+  if(nft.state == "Transfer"){
+    nft.owner = transfer.to;
+    txResult = true;
+  }
+  
+  if(nft.state != "Transfer"){
+    nft.transactions = arrPush(nft.transactions, transaction, "hash");
+    txResult = await TransactionService.create(transaction);
   }
 
+  // 트랜젝션과 트랜스퍼 배열에 추가
+  nft.transfers = arrPush(nft.transfers, transfer, "id");
+  const nftResult = await NftService.update(tokenId, nft);
+  const trResult = await TransferService.create(transfer);
+
+  console.log({nftResult, nft});
+  
+  console.log({state : transfer.state, nftResult, txResult, trResult});
+  if(nftResult && txResult && trResult){
+    res.send({ret : SUCCESS, nft : nftResult});
+  }else{
+    res.send({ret : FAIL, nft : nftResult});
+  }
+
+}
+
+function arrPush(_arr, _item, key) {
+  const arr = [ ..._arr];
+  const item = _item;
+
+  let isOverlap = false; 
+  arr.map((i) => {
+    if(i[key] == item[key]) isOverlap = true;
+  })
+  if(!isOverlap) arr.push(item);
+  return arr;
 }
 
 module.exports.getList = async (req, res) => {
