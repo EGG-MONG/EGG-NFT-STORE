@@ -4,12 +4,23 @@ import { Link } from "react-router-dom";
 const NavBar = () => {
   return (
     <NavWrap>
-      <Link to="/">EGG MONG</Link>
+      <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+        EGG MONG
+      </Link>
       <MenuWrap>
-        <Link to="/shop" style={{ marginRight: "1.5rem" }}>
+        <Link
+          to="/shop"
+          style={{
+            textDecoration: "none",
+            color: "inherit",
+            marginRight: "1.5rem",
+          }}
+        >
           Shop
         </Link>
-        <Link to="/mypage">MyPage</Link>
+        <Link to="/mypage" style={{ textDecoration: "none", color: "inherit" }}>
+          MyPage
+        </Link>
       </MenuWrap>
     </NavWrap>
   );
