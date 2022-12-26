@@ -88,7 +88,7 @@ const Shop = () => {
                           pathname: `/detail/${item.tokenId}`,
                         }}
                         style={{ textDecoration: "none", color: "inherit" }}
-                        state={{ item }}
+                        state={{ tokenId: item.tokenId }}
                       >
                         {item.name}
                       </Link>

@@ -64,7 +64,7 @@ const MyNft = () => {
                         to={{
                           pathname: `/detail/${item.tokenId}`,
                         }}
-                        state={{ item }}
+                        state={{ tokenId: item.tokenId }}
                       >
                         {item.name}
                       </Link>
