@@ -34,7 +34,11 @@ function getNftList() {
 
     if (result?.ret === SUCCESS) {
       const list = result?.list;
-      dispatch({ type: NFT_LIST, payload: { list } });
+      
+      if(getState().nft.list.length !== list.length){
+        dispatch({ type: NFT_LIST, payload: { list } });
+      }
+      
     }
   };
 }
@@ -43,9 +47,9 @@ function modifyNft(_tokenId, _transaction, _transfer){
   return async (dispatch, getState) => {
     console.log("modifyNft()");
     const result = await NftAPI.modify(_tokenId, _transaction, _transfer);
-    
+    console.log(result);
     if (result?.ret === SUCCESS) {
-      const nft = result.nft;
+      const nft = result?.nft;
       console.log({nft});
       dispatch({ type: NFT_MODIFY, payload: { nft } });
     }
@@ -98,9 +102,10 @@ function nft(state = init, action) {
             return produce(state, draft => {
               const nft = payload.nft;
               const list = draft.list.map(item => {
-                if(item.tokenId === nft.tokenId) return nft
+                if(item.tokenId == nft.tokenId) return nft
                 else return item;
               });
+              console.log({list});
               draft.list = list;
             });
         default:
