@@ -23,6 +23,7 @@ module.exports.update = async (req, res) => {
   const nft = await NftService.get(tokenId);
 
   nft.state = transfer.state;
+  nft.price = transfer.price;
   // 트랜젝션과 트랜스퍼 배열에 추가
   nft.transactions.push(transaction);
   nft.transfers.push(transfer);
@@ -43,11 +44,11 @@ module.exports.update = async (req, res) => {
 }
 
 module.exports.getList = async (req, res) => {
-
-    const blockList = await NftService.getList();
-    
-    if(blockList){
-      res.send({ret : SUCCESS,  blockList });
+    console.log("getList()");
+    const list = await NftService.getList();
+    console.log({list});
+    if(list){
+      res.send({ret : SUCCESS,  list });
     }else{
       res.send({ret : FAIL});
     }
