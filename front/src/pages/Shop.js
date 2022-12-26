@@ -46,7 +46,7 @@ const Shop = () => {
       <ListWrap>
         <ItemsWrap>
             {nftList.map((item) => {
-            if(item.price !== 0)
+            if(item.price != 0)
             return (
             <Cards key={item.tokenId}>
               <img alt="Egg Token Image" src={item.image} />
