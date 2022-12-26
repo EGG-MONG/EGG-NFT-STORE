@@ -1,12 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { table, card } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { getContract } from "../redux/contractReducer";
+import { nftEvent } from "../func/eventProcessing";
+import { modifyNftList, modifyNftSale } from "../redux/nftReducer";
 
 const Detail = () => {
+  const dispatch = useDispatch();
+
   const location = useLocation();
   const nft = location.state.item;
-  console.log(nft.transfers);
+  const account = useSelector((state) => state.contract.account);
+  const web3 = useSelector((state) => state.contract.web3);
+  const eggToken = useSelector((state) => state.contract.eggToken);
+  const saleContract = useSelector(state => state.contract.saleContract);
+
+  const [price, setPrice] = useState(nft.price);
+  const [owner, setOwner] = useState(nft.owner);
+ 
+  if(!eggToken.CA){
+    dispatch(getContract());
+  }
+
+  const buyBtnOnClick = async (nft) => {
+    
+    const answer = window.confirm(nft.price+'Wei에 구매하시겠습니까?');
+
+    if(!answer) return;
+
+    // 권한 받기
+    await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
+    
+    const result = await saleContract.deployed.methods.PurchaseToken(nft.tokenId).send({from: account, value: nft.price});
+    console.log(result);
+    
+    const sale = await nftEvent(web3, result.events.Sale);
+    const transfer = await nftEvent(web3, result.events.Transfer);
+
+    dispatch(modifyNftSale(transfer.tokenId, transfer.transaction, transfer.transfer, sale.transfer));
+    setPrice(0);
+    setOwner(account);
+  }
+
+  const sellBtnOnClick = async (nft) => {
+    console.log("sellBtnOnClick");
+    let price;
+    do {
+      price = prompt("판매하실 가격을 숫자로 적어주세요(단위:Wei)");
+    } while (isNaN(price));
+    console.log({ price });
+    // 권한 받기
+    await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
+
+    const result = await saleContract.deployed.methods
+      .ListFotSaleContract(nft.tokenId, price)
+      .send({ from: account });
+
+    const list = await nftEvent(web3, result.events.List);
+    dispatch(modifyNftList(list.tokenId, list.transaction, list.transfer));
+
+    setPrice(price);
+  };
+
+
+
   return (
     <>
       <EntireWrap>
@@ -17,17 +76,27 @@ const Detail = () => {
           <div>
             <NftTitle>{nft.name}</NftTitle>
             <OwnerArea>
-              Owned by <OwnerName>&nbsp;{nft.owner}</OwnerName>
+              Owned by <OwnerName>&nbsp;{owner}</OwnerName>
             </OwnerArea>
             <OwnerArea>
               Maker by <OwnerName>&nbsp;{nft.maker}</OwnerName>
             </OwnerArea>
             <PriceBox>
-              <span>{nft.price}</span>&nbsp; Wei
+              <span>{price}</span>&nbsp; Wei
             </PriceBox>
             <BtnBox>
-              <Button>Buy</Button>
-              <Button>Sell</Button>
+              {
+                nft.price == 0 && owner == account ? 
+                <Button onClick={() => {
+                  sellBtnOnClick(nft);
+                }}>Sell</Button> : 
+                nft.price != 0 && owner != account ? 
+                <Button onClick={()=>{
+                  buyBtnOnClick(nft);
+                }}>Buy</Button> : ""
+              }
+              
+              
             </BtnBox>
           </div>
         </InfoWrap>

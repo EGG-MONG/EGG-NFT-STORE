@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getNftList, modifyNft } from "../redux/nftReducer";
+import { getNftList, modifyNftSale } from "../redux/nftReducer";
 import { getContract } from "../redux/contractReducer";
 import { nftEvent } from "../func/eventProcessing";
 
@@ -64,10 +64,9 @@ const Shop = () => {
     console.log(result);
     
     const sale = await nftEvent(web3, result.events.Sale);
-    dispatch(modifyNft(sale.tokenId, sale.transaction, sale.transfer));
-
     const transfer = await nftEvent(web3, result.events.Transfer);
-    dispatch(modifyNft(transfer.tokenId, transfer.transaction, transfer.transfer));
+
+    dispatch(modifyNftSale(transfer.tokenId, transfer.transaction, transfer.transfer, sale.transfer));
   }
 
   return (

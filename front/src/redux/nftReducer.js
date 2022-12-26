@@ -42,10 +42,24 @@ function getNftList() {
   };
 }
 
-function modifyNft(_tokenId, _transaction, _transfer) {
+function modifyNftList(_tokenId, _transaction, _transfer) {
   return async (dispatch, getState) => {
-    console.log("modifyNft()");
-    const result = await NftAPI.modify(_tokenId, _transaction, _transfer);
+
+    const result = await NftAPI.modifyList(_tokenId, _transaction, _transfer);
+
+    console.log(result);
+    if (result?.ret === SUCCESS) {
+      const nft = result.nft;
+      console.log({ nft });
+      dispatch({ type: NFT_MODIFY, payload: { nft } });
+    }
+  };
+}
+
+function modifyNftSale(_tokenId, _transaction, _transferTf, _transferSale) {
+  return async (dispatch, getState) => {
+
+    const result = await NftAPI.modifySale(_tokenId, _transaction, _transferTf, _transferSale);
 
     console.log(result);
     if (result?.ret === SUCCESS) {
@@ -79,7 +93,7 @@ function addNftAttr({ _nft, _tokenURI, _transaction, _transfer }) {
   return nft;
 }
 
-export { addNft, getNftList, modifyNft };
+export { addNft, getNftList, modifyNftList, modifyNftSale };
 
 const init = {
   list: [],
