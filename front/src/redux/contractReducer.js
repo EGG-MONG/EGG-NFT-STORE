@@ -79,31 +79,56 @@ async function eventSubscribe(dispatch, utils, web3, eggDeployed, saleDeployed) 
 
   await saleDeployed.events.List(() => {
   }).on('data', async function(event){
-      eventDeployed(event, web3, dispatch);
+      console.log("List");
+      // eventDeployed(event, web3, dispatch);
+      const transaction = await web3.eth.getTransaction(event.transactionHash);
+      console.log({transaction});
+  
+      const { tokenId, state, price, from, to } = event.returnValues;
+  
+      const transfer = { tokenId, state, price, from, to };
+      console.log({transfer});
+      dispatch(modifyNft(tokenId, transaction, transfer));
   });
 
   await saleDeployed.events.Sale(() => {
   }).on('data', async function(event){
-      eventDeployed(event, web3, dispatch);
+      // eventDeployed(event, web3, dispatch);
+      const transaction = await web3.eth.getTransaction(event.transactionHash);
+      console.log({transaction});
+  
+      const { tokenId, state, price, from, to } = event.returnValues;
+  
+      const transfer = { tokenId, state, price, from, to };
+      console.log({transfer});
+      dispatch(modifyNft(tokenId, transaction, transfer));
   });
 
   await saleDeployed.events.Transfer(() => {
   }).on('data', async function(event){
-      eventDeployed(event, web3, dispatch);
+      // eventDeployed(event, web3, dispatch);
+      const transaction = await web3.eth.getTransaction(event.transactionHash);
+      console.log({transaction});
+  
+      const { tokenId, state, price, from, to } = event.returnValues;
+  
+      const transfer = { tokenId, state, price, from, to };
+      console.log({transfer});
+      dispatch(modifyNft(tokenId, transaction, transfer));
   });
 
   eventCheck = true;
 }
 
 const eventDeployed = async (event, web3, dispatch) => {
-  const transaction = await web3.eth.getTransaction(event.transactionHash);
-      console.log({transaction});
+    const transaction = await web3.eth.getTransaction(event.transactionHash);
+    console.log({transaction});
 
-      const { tokenId, state, price, from, to } = event.returnValues;
+    const { tokenId, state, price, from, to } = event.returnValues;
 
-      const transfer = { tokenId, state, price, from, to };
-      console.log({transfer});
-      dispatch(modifyNft(tokenId, transaction, transfer));
+    const transfer = { tokenId, state, price, from, to };
+    console.log({transfer});
+    dispatch(modifyNft(tokenId, transaction, transfer));
 }
 
 export { getContract, };

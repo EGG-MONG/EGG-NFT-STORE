@@ -9,6 +9,7 @@ import { getNftList } from "../redux/nftReducer";
 const Shop = () => {
 
   const dispatch = useDispatch();
+  const account = useSelector((state) => state.contract.account);
   const nftList = useSelector((state) => state.nft.list);
 
   const [limit, setLimit] = useState(10);
@@ -45,7 +46,7 @@ const Shop = () => {
       <ListWrap>
         <ItemsWrap>
             {nftList.map((item) => {
-            if(item.price != 0)
+            if(item.price !== 0)
             return (
             <Cards key={item.tokenId}>
               <img alt="Egg Token Image" src={item.image} />
@@ -56,10 +57,12 @@ const Shop = () => {
                   }}
                   state={{ item }}>{item.name}</Link>
                 </ItemTitle>
-                <div>{item.price} ETH</div>
+                <div>{item.price} Wei</div>
                 <BtnWrap>
-                  <Btn>CART</Btn>
-                  <Btn>BUY</Btn>
+                  {/* <Btn>CART</Btn> */}
+                  {
+                    item.owner == account ? <Btn disabled>List</Btn> : <Btn>BUY</Btn>
+                  }
                 </BtnWrap>
               </div>
             </Cards>

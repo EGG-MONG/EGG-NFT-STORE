@@ -4,6 +4,7 @@ import produce from 'immer';
 
 function addNft(_tokenURI, _transaction, _transfer){
   return async (dispatch, getState) => {
+    console.log("addNft()");
     console.log({_tokenURI});
     // const nft = await NftAPI.getNftJson(_tokenURI);
 
@@ -28,7 +29,7 @@ function addNft(_tokenURI, _transaction, _transfer){
 
 function getNftList() {
   return async (dispatch, getState) => {
-
+    console.log("getNftList()");
     const result = await NftAPI.getAll();
 
     if (result?.ret === SUCCESS) {
@@ -40,10 +41,12 @@ function getNftList() {
 
 function modifyNft(_tokenId, _transaction, _transfer){
   return async (dispatch, getState) => {
+    console.log("modifyNft()");
     const result = await NftAPI.modify(_tokenId, _transaction, _transfer);
     
     if (result?.ret === SUCCESS) {
       const nft = result.nft;
+      console.log({nft});
       dispatch({ type: NFT_MODIFY, payload: { nft } });
     }
   };

@@ -21,6 +21,7 @@ const MyNft = () => {
   
 
   if(!nftList.length) {
+    console.log("!nftList");
     dispatch(getNftList());
     return;
   }
@@ -30,11 +31,12 @@ const MyNft = () => {
   }
 
   const buyBtnOnClick = async (nft) => {
+    console.log("buyBtnOnClick");
     let price;
     do {
       price = prompt('판매하실 가격을 숫자로 적어주세요(단위:Wei)');
     }while(isNaN(price))
-    
+    console.log({price});
     // 권한 받기
     await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
     
@@ -59,9 +61,14 @@ const MyNft = () => {
                   }}
                   state={{ item }}>{item.name}</Link>
                 </ItemTitle>
-                <div>{item.price} ETH</div>
+                <div>{item.price} Wei</div>
                 <BtnWrap>
-                  <Btn onClick={buyBtnOnClick}>SALE</Btn>
+                  {
+                    item.state != "List" ? <Btn onClick={()=>{
+                      buyBtnOnClick(item);
+                    }}>SALE</Btn> : <Btn disabled>List</Btn>
+                  }
+                  
                 </BtnWrap>
               </div>
             </Cards>
