@@ -9,16 +9,16 @@ module.exports = {
       port: 8545, // Standard Ethereum port (default: none)
       network_id: "1337", // Any network (default: none)
     },
-    // goerli: {
-    //   provider: () =>
-    //     new HDWalletProvider({
-    //       mnemonic: {
-    //         phrase: process.env.MNEMONIC,
-    //       },
-    //       providerOrUrl: process.env.INFURA_API_KEY,
-    //     }),
-    //   network_id: "5",
-    // },
+    goerli: {
+      provider: () =>
+        new HDWalletProvider({
+          mnemonic: {
+            phrase: process.env.MNEMONIC,
+          },
+          providerOrUrl: process.env.INFURA_API_KEY,
+        }),
+      network_id: "5",
+    },
   },
 
   compilers: {
