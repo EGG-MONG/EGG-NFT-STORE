@@ -1,92 +1,174 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import FavoriteNft from "../components/FavoriteNft";
-import MyNft from "../components/MyNft";
-import UploadedNft from "../components/UploadedNft";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 import { getContract } from "../redux/contractReducer";
+import { getNftList } from "../redux/nftReducer";
+import Paging from "../components/Paging";
 
 const MyPage = () => {
-  const dispatch = useDispatch();
-  const account = useSelector((state) => state.contract.account);
-  const [index, setIndex] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
 
-  if(!account){
+  const offset = (page - 1) * limit;
+
+  const dispatch = useDispatch();
+  const nftList = useSelector((state) => state.nft.list);
+  const account = useSelector((state) => state.contract.account);
+  const eggToken = useSelector((state) => state.contract.eggToken);
+  const saleContract = useSelector((state) => state.contract.saleContract);
+
+  if (!nftList.length) {
+    console.log("!nftList");
+    dispatch(getNftList());
+    return;
+  }
+  if (!eggToken.CA) {
+    dispatch(getContract());
+    return;
+  }
+  if (!account) {
     dispatch(getContract());
     return;
   }
 
-  const menuArr = ["구매한 NFT", ]; //"업로드 한 NFT", "즐겨찾기"
-
-  
-
-  const clickHandler = (idx) => {
-    setIndex(idx);
-  };
-
-  const pages = {
-    0: <MyNft />,
-    // 1: <UploadedNft />,
-    // 2: <FavoriteNft />,
-  };
-
   if (!account) return <Address>메타마스크를 연결해주세요</Address>;
+
+  const buyBtnOnClick = async (nft) => {
+    console.log("buyBtnOnClick");
+    let price;
+    do {
+      price = prompt("판매하실 가격을 숫자로 적어주세요(단위:Wei)");
+    } while (isNaN(price));
+    console.log({ price });
+    // 권한 받기
+    await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
+
+    const result = await saleContract.deployed.methods
+      .ListFotSaleContract(nft.tokenId, price)
+      .send({ from: account });
+    console.log(result);
+  };
 
   return (
     <>
-      <div>
+      <MainContainer>
         <Address>계정 : {account}</Address>
-        <MenuWrap>
-          <TabTitle>
-            {menuArr.map((menu, idx) => {
-              return (
-                <li key={idx} onClick={() => clickHandler(idx)}>
-                  {menu}
-                </li>
-              );
+        <ListWrap>
+          <ItemsWrap>
+            {nftList.slice(offset, offset + limit).map((item) => {
+              if (item.owner == account)
+                return (
+                  <Cards key={item.tokenId}>
+                    <img alt="Egg Token Img" src={item.image} />
+                    <div>
+                      <ItemTitle>
+                        <Link
+                          to={{
+                            pathname: `/detail/${item.tokenId}`,
+                          }}
+                          style={{ textDecoration: "none", color: "inherit" }}
+                          state={{ item }}
+                        >
+                          {item.name}
+                        </Link>
+                      </ItemTitle>
+                      <div>{item.price} Wei</div>
+                      <BtnWrap>
+                        {item.state != "List" ? (
+                          <Btn
+                            onClick={() => {
+                              buyBtnOnClick(item);
+                            }}
+                          >
+                            SALE
+                          </Btn>
+                        ) : (
+                          <Btn disabled>List</Btn>
+                        )}
+                      </BtnWrap>
+                    </div>
+                  </Cards>
+                );
             })}
-          </TabTitle>
-          <div>{pages[index]}</div>
-        </MenuWrap>
-      </div>
+          </ItemsWrap>
+        </ListWrap>
+      </MainContainer>
+      <Paging
+        total={nftList.length}
+        limit={limit}
+        page={page}
+        setPage={setPage}
+      />
     </>
   );
 };
 
-const Address = styled.div`
-  width: inherit;
-  padding-top: 3rem;
+const Address = styled.h1`
+  text-align: center;
   padding-left: 3rem;
   font-size: 2.5rem;
 `;
 
-const MenuWrap = styled.div`
-  width: inherit;
-  padding-top: 3rem;
-  padding-left: 3rem;
+const MainContainer = styled.div``;
+
+const ListWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-const TabTitle = styled.ul`
-  display: flex;
+const ItemsWrap = styled.div`
+  padding-top: 1rem;
+  text-align: center;
+  display: grid;
+  align-content: center;
   justify-items: center;
-  align-items: center;
+  grid-template-columns: repeat(5, 1fr);
+  column-gap: 2rem;
+  row-gap: 2rem;
+`;
 
-  > li {
-    cursor: pointer;
-    width: 15rem;
-    height: 3rem;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    background-color: #b2b2b2;
-    font-size: 1.5rem;
-    text-align: center;
-    padding-top: 0.7rem;
-    margin-right: 3rem;
+const ItemTitle = styled.h1`
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`;
 
-    > li:active {
-      background-color: plum;
-    }
+const Cards = styled.div`
+  width: 15rem;
+  height: 22rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 1rem;
+  background-color: white;
+
+  > img {
+    width: 200px;
+    margin: 1rem 0 1rem 0;
   }
 `;
 
+const BtnWrap = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+`;
+
+const Btn = styled.button`
+  cursor: pointer;
+  width: 100px;
+  height: 2rem;
+  font-size: 1.2rem;
+  padding-top: 0.3rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  border: 0.5px solid gray;
+
+  &:hover {
+    background-color: plum;
+    color: white;
+  }
+`;
 export default MyPage;
