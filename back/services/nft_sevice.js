@@ -32,7 +32,7 @@ module.exports.getList = async () => {
 module.exports.update = async (tokenId, nft) => {
   // console.log(nft);
   try {
-    return await Nft.findOneAndUpdate({tokenId}, nft);
+    return await Nft.findOneAndUpdate({tokenId}, nft, {new: true});
   } catch (error) {
     console.error(error);
     return false;
