@@ -18,36 +18,41 @@ module.exports.create = async (req, res) => {
 };
 
 module.exports.update = async (req, res) => {
+  console.log("==========================================================");
   console.log("update()");
   const { tokenId, transaction, transfer } = req.body;
   console.log({ tokenId, transaction, transfer });
 
   const nft = await NftService.get(tokenId);
-
-  nft.price = transfer.price;
-  nft.state = transfer.state;
   
   let txResult;
+  // Transfer 때만 소유자가 변경된다.
   if(nft.state == "Transfer"){
     nft.owner = transfer.to;
     txResult = true;
-  }
-  
-  if(nft.state != "Transfer"){
+  }else {
+    // Transfer와 Sale의 트랜잭션 값은 동일하므로 Transfer 때는 저장하지 않는다.
     nft.transactions = arrPush(nft.transactions, transaction, "hash");
     txResult = await TransactionService.create(transaction);
   }
 
-  // 트랜젝션과 트랜스퍼 배열에 추가
+  nft.price = transfer.price;
+  nft.state = transfer.state;
+
+  // 트랜스퍼 배열에 추가
   nft.transfers = arrPush(nft.transfers, transfer, "id");
-  const nftResult = await NftService.update(tokenId, nft);
   const trResult = await TransferService.create(transfer);
+
+  const nftResult = await NftService.update(tokenId, nft);
+  
 
   console.log({nftResult, nft});
   
   console.log({state : transfer.state, nftResult, txResult, trResult});
+
+  console.log("==========================================================");
   if(nftResult && txResult && trResult){
-    res.send({ret : SUCCESS, nft : nftResult});
+    res.send({ret : SUCCESS, nft});
   }else{
     res.send({ret : FAIL, nft : nftResult});
   }

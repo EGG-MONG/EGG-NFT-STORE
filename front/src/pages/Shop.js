@@ -48,25 +48,21 @@ const Shop = () => {
   const offset = (page - 1) * limit;
 
   const buyBtnOnClick = async (nft) => {
-    console.log("buyBtnOnClick");
-    let price;
-    do {
-      price = prompt('구매하실 가격을 판매가 이상으로 숫자로 적어주세요(단위:Wei)');
+    
+    const answer = window.confirm(nft.price+'Wei에 구매하시겠습니까?');
 
-      if(price == false) break;                                                                                    
-    }while(isNaN(price) || nft.price > price)
-    console.log({price});
+    if(!answer) return;
+
     // 권한 받기
     await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
     
-    const result = await saleContract.deployed.methods.PurchaseToken(nft.tokenId).send({from: account, value: price});
+    const result = await saleContract.deployed.methods.PurchaseToken(nft.tokenId).send({from: account, value: nft.price});
     console.log(result);
     
     const sale = await nftEvent(web3, result.events.Sale);
     dispatch(modifyNft(sale.tokenId, sale.transaction, sale.transfer));
 
     const transfer = await nftEvent(web3, result.events.Transfer);
-    
     dispatch(modifyNft(transfer.tokenId, transfer.transaction, transfer.transfer));
   }
 
