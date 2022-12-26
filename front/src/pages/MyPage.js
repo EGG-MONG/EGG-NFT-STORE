@@ -17,9 +17,10 @@ const MyPage = () => {
   const account = useSelector((state) => state.contract.account);
   const eggToken = useSelector((state) => state.contract.eggToken);
   const saleContract = useSelector((state) => state.contract.saleContract);
+  console.log(nftList);
 
-  if (!nftList.length) {
-    console.log("!nftList");
+  if (nftList.length === 0) {
+    // console.log("!nftList");
     dispatch(getNftList());
     return;
   }
@@ -81,7 +82,7 @@ const MyPage = () => {
                               buyBtnOnClick(item);
                             }}
                           >
-                            SALE
+                            Sell
                           </Btn>
                         ) : (
                           <Btn disabled>List</Btn>
@@ -94,12 +95,16 @@ const MyPage = () => {
           </ItemsWrap>
         </ListWrap>
       </MainContainer>
-      <Paging
-        total={nftList.length}
-        limit={limit}
-        page={page}
-        setPage={setPage}
-      />
+      {nftList[0].owner == account ? (
+        <Paging
+          total={nftList.length}
+          limit={limit}
+          page={page}
+          setPage={setPage}
+        />
+      ) : (
+        ""
+      )}
     </>
   );
 };

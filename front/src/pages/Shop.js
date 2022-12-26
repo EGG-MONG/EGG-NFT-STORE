@@ -10,13 +10,13 @@ import { nftEvent } from "../func/eventProcessing";
 
 const Shop = () => {
   const dispatch = useDispatch();
-  
+
   const nftList = useSelector((state) => state.nft.list);
 
   const account = useSelector((state) => state.contract.account);
   const web3 = useSelector((state) => state.contract.web3);
   const eggToken = useSelector((state) => state.contract.eggToken);
-  const saleContract = useSelector(state => state.contract.saleContract);
+  const saleContract = useSelector((state) => state.contract.saleContract);
 
   // 판매 상태인 애들만 새로운 배열로 만들었음
   const listed = nftList.filter((item) => {
@@ -29,9 +29,11 @@ const Shop = () => {
 
   if (nftList.length === 0) {
     dispatch(getNftList());
+    return;
   }
-  if(!eggToken.CA){
+  if (!eggToken.CA) {
     dispatch(getContract());
+    return;
   }
   console.log(nftList);
   // 페이지 네이션
@@ -55,24 +57,30 @@ const Shop = () => {
     console.log("buyBtnOnClick");
     let price;
     do {
-      price = prompt('구매하실 가격을 판매가 이상으로 숫자로 적어주세요(단위:Wei)');
+      price = prompt(
+        "구매하실 가격을 판매가 이상으로 숫자로 적어주세요(단위:Wei)"
+      );
 
-      if(price == false) break;                                                                                    
-    }while(isNaN(price) || nft.price > price)
-    console.log({price});
+      if (price == false) break;
+    } while (isNaN(price) || nft.price > price);
+    console.log({ price });
     // 권한 받기
     await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
-    
-    const result = await saleContract.deployed.methods.PurchaseToken(nft.tokenId).send({from: account, value: price});
+
+    const result = await saleContract.deployed.methods
+      .PurchaseToken(nft.tokenId)
+      .send({ from: account, value: price });
     console.log(result);
-    
+
     const sale = await nftEvent(web3, result.events.Sale);
     dispatch(modifyNft(sale.tokenId, sale.transaction, sale.transfer));
 
     const transfer = await nftEvent(web3, result.events.Transfer);
-    
-    dispatch(modifyNft(transfer.tokenId, transfer.transaction, transfer.transfer));
-  }
+
+    dispatch(
+      modifyNft(transfer.tokenId, transfer.transaction, transfer.transfer)
+    );
+  };
 
   return (
     <>
@@ -104,9 +112,13 @@ const Shop = () => {
                       {item.owner == account ? (
                         <Btn disabled>List</Btn>
                       ) : (
-                        <Btn onClick={()=>{
-                          buyBtnOnClick(item);
-                        }}>BUY</Btn>
+                        <Btn
+                          onClick={() => {
+                            buyBtnOnClick(item);
+                          }}
+                        >
+                          BUY
+                        </Btn>
                       )}
                     </BtnWrap>
                   </div>
@@ -115,12 +127,16 @@ const Shop = () => {
           })}
         </ItemsWrap>
       </ListWrap>
-      <Paging
-        total={listed.length}
-        limit={limit}
-        page={page}
-        setPage={setPage}
-      />
+      {listed.length == 0 ? (
+        ""
+      ) : (
+        <Paging
+          total={listed.length}
+          limit={limit}
+          page={page}
+          setPage={setPage}
+        />
+      )}
     </>
   );
 };
