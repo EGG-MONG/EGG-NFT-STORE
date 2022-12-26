@@ -27,8 +27,7 @@ const Detail = () => {
             </PriceBox>
             <BtnBox>
               <Button>Buy</Button>
-              <Button>cart</Button>
-              <Button>Sell(Offer)</Button>
+              <Button>Sell</Button>
             </BtnBox>
           </div>
         </InfoWrap>
