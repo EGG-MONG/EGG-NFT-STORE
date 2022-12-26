@@ -1,7 +1,7 @@
 require("dotenv").config();
-
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 // npx truffle migrate --network goerli
-
+// , process.env.INFURA_API_KEY
 module.exports = {
   networks: {
     development: {
@@ -10,10 +10,15 @@ module.exports = {
       network_id: "1337", // Any network (default: none)
     },
     // goerli: {
-    //   provider: () => new HDWalletProvider(process.env.MNEMONIC, process.env.INFURA_API_KEY),
-    //   network_id: '5',
-    //   gas: 4465030
-    // }
+    //   provider: () =>
+    //     new HDWalletProvider({
+    //       mnemonic: {
+    //         phrase: process.env.MNEMONIC,
+    //       },
+    //       providerOrUrl: process.env.INFURA_API_KEY,
+    //     }),
+    //   network_id: "5",
+    // },
   },
 
   compilers: {
