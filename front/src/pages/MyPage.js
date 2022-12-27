@@ -6,11 +6,14 @@ import { getContract } from "../redux/contractReducer";
 import { getNftList, modifyNftList } from "../redux/nftReducer";
 import Paging from "../components/Paging";
 import { nftEvent } from "../func/eventProcessing";
+import Loading from "../components/Loading";
 
 const MyPage = () => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
+  const [loading, setLoading] = useState(false);
+  const [finish, setFinish] = useState(false);
   const offset = (page - 1) * limit;
 
   const dispatch = useDispatch();
@@ -19,9 +22,9 @@ const MyPage = () => {
   const account = useSelector((state) => state.contract.account);
   const eggToken = useSelector((state) => state.contract.eggToken);
   const saleContract = useSelector((state) => state.contract.saleContract);
+  console.log(nftList);
 
-  if (!nftList.length) {
-    console.log("!nftList");
+  if (nftList.length === 0) {
     dispatch(getNftList());
     return;
   }
@@ -33,22 +36,33 @@ const MyPage = () => {
   if (!account) return <Address>메타마스크를 연결해주세요</Address>;
 
   const sellBtnOnClick = async (nft) => {
-    console.log("sellBtnOnClick");
-    let price;
-    do {
-      price = prompt("판매하실 가격을 숫자로 적어주세요(단위:Wei)");
-    } while (isNaN(price));
-    console.log({ price });
-    // 권한 받기
-    await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
+    setLoading(true);
+    setFinish(false);
+    try {
+      console.log("sellBtnOnClick");
+      let price;
+      do {
+        price = prompt("판매하실 가격을 숫자로 적어주세요(단위:Wei)");
+      } while (isNaN(price));
+      console.log({ price });
+      // 권한 받기
+      await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
 
-    const result = await saleContract.deployed.methods
-      .ListFotSaleContract(nft.tokenId, price)
-      .send({ from: account });
+      const result = await saleContract.deployed.methods
+        .ListFotSaleContract(nft.tokenId, price)
+        .send({ from: account });
 
-    const list = await nftEvent(web3, result.events.List);
-    dispatch(modifyNftList(list.tokenId, list.transaction, list.transfer));
+      const list = await nftEvent(web3, result.events.List);
+      dispatch(modifyNftList(list.tokenId, list.transaction, list.transfer));
+
+      setFinish(true);
+      setLoading(false);
+    } catch (error) {
+      alert("취소되었습니다");
+      window.location.replace("/mypage");
+    }
   };
+  if (loading) return <Loading />;
 
   return (
     <>
@@ -67,7 +81,10 @@ const MyPage = () => {
                           to={{
                             pathname: `/detail/${item.tokenId}`,
                           }}
-                          style={{ textDecoration: "none", color: "inherit" }}
+                          style={{
+                            textDecoration: "none",
+                            color: "inherit",
+                          }}
                           state={{ tokenId: item.tokenId }}
                         >
                           {item.name}
@@ -81,7 +98,7 @@ const MyPage = () => {
                               sellBtnOnClick(item);
                             }}
                           >
-                            SALE
+                            Sell
                           </Btn>
                         ) : (
                           <Btn disabled>List</Btn>

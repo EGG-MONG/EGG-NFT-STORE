@@ -7,16 +7,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { getNftList, modifyNftSale } from "../redux/nftReducer";
 import { getContract } from "../redux/contractReducer";
 import { nftEvent } from "../func/eventProcessing";
+import Loading from "../components/Loading";
 
 const Shop = () => {
   const dispatch = useDispatch();
-  
+
   const nftList = useSelector((state) => state.nft.list);
 
   const account = useSelector((state) => state.contract.account);
   const web3 = useSelector((state) => state.contract.web3);
   const eggToken = useSelector((state) => state.contract.eggToken);
-  const saleContract = useSelector(state => state.contract.saleContract);
+  const saleContract = useSelector((state) => state.contract.saleContract);
 
   // 판매 상태인 애들만 새로운 배열로 만들었음
   const listed = nftList.filter((item) => {
@@ -27,11 +28,16 @@ const Shop = () => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
+  const [loading, setLoading] = useState(false);
+  const [finish, setFinish] = useState(false);
+
   if (nftList.length === 0) {
     dispatch(getNftList());
+    return;
   }
-  if(!eggToken.CA){
+  if (!eggToken.CA) {
     dispatch(getContract());
+    return;
   }
   console.log(nftList);
   // 페이지 네이션
@@ -52,23 +58,40 @@ const Shop = () => {
   const offset = (page - 1) * limit;
 
   const buyBtnOnClick = async (nft) => {
-    
-    const answer = window.confirm(nft.price+'Wei에 구매하시겠습니까?');
+    setLoading(true);
+    setFinish(false);
+    try {
+      const answer = window.confirm(nft.price + "Wei에 구매하시겠습니까?");
 
-    if(!answer) return;
+      if (!answer) return;
 
-    // 권한 받기
-    await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
-    
-    const result = await saleContract.deployed.methods.PurchaseToken(nft.tokenId).send({from: account, value: nft.price});
-    console.log(result);
-    
-    const sale = await nftEvent(web3, result.events.Sale);
-    const transfer = await nftEvent(web3, result.events.Transfer);
+      // 권한 받기
+      await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
 
-    dispatch(modifyNftSale(transfer.tokenId, transfer.transaction, transfer.transfer, sale.transfer));
-  }
+      const result = await saleContract.deployed.methods
+        .PurchaseToken(nft.tokenId)
+        .send({ from: account, value: nft.price });
+      console.log(result);
 
+      const sale = await nftEvent(web3, result.events.Sale);
+      const transfer = await nftEvent(web3, result.events.Transfer);
+
+      dispatch(
+        modifyNftSale(
+          transfer.tokenId,
+          transfer.transaction,
+          transfer.transfer,
+          sale.transfer
+        )
+      );
+      setFinish(true);
+      setLoading(false);
+    } catch (error) {
+      alert("취소되었습니다");
+      window.location.replace("/shop");
+    }
+  };
+  if (loading) return <Loading />;
   return (
     <>
       {/* <SearchWrap>
@@ -99,9 +122,13 @@ const Shop = () => {
                       {item.owner == account ? (
                         <Btn disabled>List</Btn>
                       ) : (
-                        <Btn onClick={()=>{
-                          buyBtnOnClick(item);
-                        }}>BUY</Btn>
+                        <Btn
+                          onClick={() => {
+                            buyBtnOnClick(item);
+                          }}
+                        >
+                          BUY
+                        </Btn>
                       )}
                     </BtnWrap>
                   </div>
@@ -110,12 +137,16 @@ const Shop = () => {
           })}
         </ItemsWrap>
       </ListWrap>
-      <Paging
-        total={listed.length}
-        limit={limit}
-        page={page}
-        setPage={setPage}
-      />
+      {listed.length == 0 ? (
+        ""
+      ) : (
+        <Paging
+          total={listed.length}
+          limit={limit}
+          page={page}
+          setPage={setPage}
+        />
+      )}
     </>
   );
 };
