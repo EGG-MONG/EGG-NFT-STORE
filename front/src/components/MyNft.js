@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { nftEvent } from "../func/eventProcessing";
 import { getContract } from "../redux/contractReducer";
-import { getNftList, modifyNft } from "../redux/nftReducer";
+import { getNftList, modifyNftList } from "../redux/nftReducer";
 import Paging from "./Paging";
 
 const MyNft = () => {
@@ -46,7 +46,7 @@ const MyNft = () => {
       web3,
       result.events.List
     );
-    dispatch(modifyNft(tokenId, transaction, transfer));
+    dispatch(modifyNftList(tokenId, transaction, transfer));
   };
 
   return (
@@ -64,7 +64,7 @@ const MyNft = () => {
                         to={{
                           pathname: `/detail/${item.tokenId}`,
                         }}
-                        state={{ item }}
+                        state={{ tokenId: item.tokenId }}
                       >
                         {item.name}
                       </Link>

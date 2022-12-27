@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getContract } from "../redux/contractReducer";
 import { useState } from "react";
 import LoadMinting from "../components/LoadMinting";
+import { nftEvent } from "../func/eventProcessing";
+import { addNft } from "../redux/nftReducer";
 
 const Minting = (/*{ web3, account }*/) => {
   const [loading, setLoading] = useState(false);
@@ -10,7 +12,7 @@ const Minting = (/*{ web3, account }*/) => {
   const [imgId, setImgId] = useState(0);
 
   const dispatch = useDispatch();
-  // const web3 = useSelector((state) => state.contract.web3);
+  const web3 = useSelector((state) => state.contract.web3);
   const account = useSelector((state) => state.contract.account);
   const eggToken = useSelector((state) => state.contract.eggToken);
   const saleContract = useSelector((state) => state.contract.saleContract);
@@ -19,6 +21,7 @@ const Minting = (/*{ web3, account }*/) => {
     dispatch(getContract());
     return;
   }
+
   const minting = async () => {
     setLoading(true);
     setFinish(false);
@@ -30,6 +33,11 @@ const Minting = (/*{ web3, account }*/) => {
       setFinish(true);
       setImgId(result.events.Minting.returnValues.tokenId);
       setLoading(false);
+
+      const {transaction, transfer} = await nftEvent(web3, result.events.Minting);
+      const tokenURI = eggToken.metadataURI+"/"+tokenId+".json"
+      dispatch(addNft(tokenURI, transaction, transfer));
+
     } catch {
       alert("error!");
       window.location.replace("/");

@@ -8,9 +8,12 @@ export const add = async (nft, transaction, transfer) => {
     return await baseAPI.post(`/${query}`, {nft, transaction, transfer});
 }
 
-// 기본 값 null로 null이 아닌 업데이트 항목만 객체로 만들어서 업데이트 필드에 넣는다.
-export const modify = async (tokenId, transaction, transfer) => {
-    return await baseAPI.put(`/${query}`, {tokenId, transaction, transfer});
+export const modifyList = async (tokenId, transaction, transfer) => {
+    return await baseAPI.put(`/${query}/list`, {tokenId, transaction, transfer});
+}
+
+export const modifySale = async (tokenId, transaction, transferTf, transferSale) => {
+    return await baseAPI.put(`/${query}/sale`, {tokenId, transaction, transferTf, transferSale});
 }
 
 export const getAll = async () => {

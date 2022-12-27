@@ -2,32 +2,106 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { table, card } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { getContract } from "../redux/contractReducer";
+import { nftEvent } from "../func/eventProcessing";
+import { getNftList, modifyNftList, modifyNftSale } from "../redux/nftReducer";
 
 const Detail = () => {
+  const dispatch = useDispatch();
+
   const location = useLocation();
-  const nft = location.state.item;
-  console.log(nft.transfers);
+  const tokenId = location.state.tokenId;
+  const nftList = useSelector((state) => state.nft.list);
+
+  const account = useSelector((state) => state.contract.account);
+  const web3 = useSelector((state) => state.contract.web3);
+  const eggToken = useSelector((state) => state.contract.eggToken);
+  const saleContract = useSelector(state => state.contract.saleContract);
+
+  if (!nftList.length) {
+    console.log("!nftList"); 
+    dispatch(getNftList());
+  }
+
+  if(!eggToken.CA){
+    dispatch(getContract());
+  }
+
+  let index;
+  nftList.map((item, i) => {
+    if(item.tokenId == tokenId) index = i;
+  })
+
+  const buyBtnOnClick = async (nft) => {
+    
+    const answer = window.confirm(nft.price+'Wei에 구매하시겠습니까?');
+
+    if(!answer) return;
+
+    // 권한 받기
+    await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
+    
+    const result = await saleContract.deployed.methods.PurchaseToken(nft.tokenId).send({from: account, value: nft.price});
+    console.log(result);
+    
+    const sale = await nftEvent(web3, result.events.Sale);
+    const transfer = await nftEvent(web3, result.events.Transfer);
+
+    dispatch(modifyNftSale(transfer.tokenId, transfer.transaction, transfer.transfer, sale.transfer));
+  }
+
+  const sellBtnOnClick = async (nft) => {
+    console.log("sellBtnOnClick");
+    let price;
+    do {
+      price = prompt("판매하실 가격을 숫자로 적어주세요(단위:Wei)");
+    } while (isNaN(price));
+    console.log({ price });
+    // 권한 받기
+    await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
+
+    const result = await saleContract.deployed.methods
+      .ListFotSaleContract(nft.tokenId, price)
+      .send({ from: account });
+
+    const list = await nftEvent(web3, result.events.List);
+    dispatch(modifyNftList(list.tokenId, list.transaction, list.transfer));
+  };
+
+
+
   return (
     <>
       <EntireWrap>
         <InfoWrap>
           <ImageWrap>
-            <DetailImg src={nft.image} alt="sellingItems" />
+            <DetailImg src={nftList[index].image} alt="sellingItems" />
           </ImageWrap>
           <div>
-            <NftTitle>{nft.name}</NftTitle>
+            <NftTitle>{nftList[index].name}</NftTitle>
             <OwnerArea>
-              Owned by <OwnerName>&nbsp;{nft.owner}</OwnerName>
+              Owned by <OwnerName>&nbsp;{nftList[index].owner}</OwnerName>
             </OwnerArea>
             <OwnerArea>
-              Maker by <OwnerName>&nbsp;{nft.maker}</OwnerName>
+              Maker by <OwnerName>&nbsp;{nftList[index].maker}</OwnerName>
             </OwnerArea>
             <PriceBox>
-              <span>{nft.price}</span>&nbsp; Wei
+              <span>{nftList[index].price}</span>&nbsp; Wei
             </PriceBox>
             <BtnBox>
-              <Button>Buy</Button>
-              <Button>Sell</Button>
+              {
+                nftList[index].price == 0 && nftList[index].owner == account ? 
+                <Button onClick={() => {
+                  sellBtnOnClick(nftList[index]);
+                }}>Sell</Button> : 
+                nftList[index].price != 0 && nftList[index].owner != account ? 
+                <Button onClick={()=>{
+                  buyBtnOnClick(nftList[index]);
+                }}>Buy</Button> : ""
+              }
+              
+              
             </BtnBox>
           </div>
         </InfoWrap>
@@ -36,7 +110,7 @@ const Detail = () => {
           <div className="card">
             <div className="card-header">ABOUT</div>
             <ul className="list-group list-group-flush">
-              <li className="list-group-item">{nft.description}</li>
+              <li className="list-group-item">{nftList[index].description}</li>
             </ul>
           </div>
 
@@ -44,7 +118,7 @@ const Detail = () => {
             <div className="card-header">PROPERTIES</div>
             <ul className="list-group list-group-flush">
               <li className="list-group-item">
-                {nft.attributes.map((item, idx) => (
+                {nftList[index].attributes.map((item, idx) => (
                   <div key={idx}>
                     {item.trait_type} : {item.value} <br />
                   </div>
@@ -66,7 +140,7 @@ const Detail = () => {
             </thead>
             <tbody>
               {/* 여기 for문으로 돌려서(?) 최신순으로 정렬되게 */}
-              {nft.transfers.map((item, idx) => (
+              {nftList[index].transfers.map((item, idx) => (
                 <tr key={idx}>
                   <td>{item.state}</td>
                   <td>{item.price}</td>
