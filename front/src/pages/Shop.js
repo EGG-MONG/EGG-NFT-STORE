@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getNftList, modifyNftSale } from "../redux/nftReducer";
 import { getContract } from "../redux/contractReducer";
 import { nftEvent } from "../func/eventProcessing";
+import Loading from "../components/Loading";
 
 const Shop = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,9 @@ const Shop = () => {
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+
+  const [loading, setLoading] = useState(false);
+  const [finish, setFinish] = useState(false);
 
   if (nftList.length === 0) {
     dispatch(getNftList());
@@ -54,23 +58,40 @@ const Shop = () => {
   const offset = (page - 1) * limit;
 
   const buyBtnOnClick = async (nft) => {
-    
-    const answer = window.confirm(nft.price+'Wei에 구매하시겠습니까?');
+    setLoading(true);
+    setFinish(false);
+    try {
+      const answer = window.confirm(nft.price + "Wei에 구매하시겠습니까?");
 
-    if(!answer) return;
+      if (!answer) return;
 
-    // 권한 받기
-    await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
-    
-    const result = await saleContract.deployed.methods.PurchaseToken(nft.tokenId).send({from: account, value: nft.price});
-    console.log(result);
+      // 권한 받기
+      await eggToken.deployed.methods.setApprovalForAll(saleContract.CA, true);
 
-    const sale = await nftEvent(web3, result.events.Sale);
-    const transfer = await nftEvent(web3, result.events.Transfer);
+      const result = await saleContract.deployed.methods
+        .PurchaseToken(nft.tokenId)
+        .send({ from: account, value: nft.price });
+      console.log(result);
 
-    dispatch(modifyNftSale(transfer.tokenId, transfer.transaction, transfer.transfer, sale.transfer));
-  }
+      const sale = await nftEvent(web3, result.events.Sale);
+      const transfer = await nftEvent(web3, result.events.Transfer);
 
+      dispatch(
+        modifyNftSale(
+          transfer.tokenId,
+          transfer.transaction,
+          transfer.transfer,
+          sale.transfer
+        )
+      );
+      setFinish(true);
+      setLoading(false);
+    } catch (error) {
+      alert("취소되었습니다");
+      window.location.replace("/shop");
+    }
+  };
+  if (loading) return <Loading />;
   return (
     <>
       {/* <SearchWrap>

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { getContract } from "../redux/contractReducer";
 import { useState } from "react";
-import LoadMinting from "../components/LoadMinting";
+import Loading from "../components/Loading";
 import { nftEvent } from "../func/eventProcessing";
 import { addNft } from "../redux/nftReducer";
 
@@ -34,10 +34,12 @@ const Minting = (/*{ web3, account }*/) => {
       setImgId(result.events.Minting.returnValues.tokenId);
       setLoading(false);
 
-      const {transaction, transfer} = await nftEvent(web3, result.events.Minting);
-      const tokenURI = eggToken.metadataURI+"/"+tokenId+".json"
+      const { transaction, transfer } = await nftEvent(
+        web3,
+        result.events.Minting
+      );
+      const tokenURI = eggToken.metadataURI + "/" + tokenId + ".json";
       dispatch(addNft(tokenURI, transaction, transfer));
-
     } catch {
       alert("error!");
       window.location.replace("/");
@@ -48,7 +50,7 @@ const Minting = (/*{ web3, account }*/) => {
     <>
       <MintingArea>
         {loading ? (
-          <LoadMinting />
+          <Loading />
         ) : (
           <>
             {finish ? (
