@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getContract } from "../redux/contractReducer";
 import { nftEvent } from "../func/eventProcessing";
 import { getNftList, modifyNftList, modifyNftSale } from "../redux/nftReducer";
+import { Link } from "react-router-dom";
 
 const Detail = () => {
   const dispatch = useDispatch();
@@ -68,8 +69,6 @@ const Detail = () => {
     const list = await nftEvent(web3, result.events.List);
     dispatch(modifyNftList(list.tokenId, list.transaction, list.transfer));
   };
-
-
 
   return (
     <>
@@ -155,6 +154,30 @@ const Detail = () => {
                       : item.to}
                   </td>
                   <td>{item.createdAt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <h1>TRANSACTION</h1>
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">hash</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* 여기 for문으로 돌려서(?) 최신순으로 정렬되게 */}
+              {nftList[index].transactions.map((item) => (
+                <tr>
+                  <td><Link
+                        to={{
+                          pathname: `/transaction/${item.hash}`,
+                        }}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                        state={{ item, tokenId : nftList[index].tokenId }}
+                      >
+                        {item.hash}
+                      </Link></td>
                 </tr>
               ))}
             </tbody>
