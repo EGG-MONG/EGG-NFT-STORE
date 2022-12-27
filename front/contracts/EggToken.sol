@@ -20,20 +20,17 @@ contract EggToken is ERC721Enumerable, Ownable {
     string public metadataURI;
 
     // 발행된 토큰 목록
-    uint8[] tokenList;
+    uint256[] tokenList;
 
     // minting 이벤트 등록
-    event Minting(uint8 tokenId, string state, uint price, address from, address to);
+    event Minting(uint256 tokenId, string state, uint price, address from, address to);
 
     // 생성자 함수
     constructor(string memory _name, string memory _symbol, string memory _metadataURI) ERC721 (_name, _symbol) {
         metadataURI = _metadataURI;
     }
 
-    function mintToken(address _saleContractCA, uint8 _tokenId) public payable {
-
-        // 중복되는 tokenId가 존재하지 않을 경우에만 발행한다.
-        require(_overlapCheckTokenId(_tokenId), "EggToken : It's a token that already exists");
+    function mintToken(address _saleContractCA) public payable {
 
         // mintPrice보다 지불하려는 가격이 이상일 경우에만 발행한다
         require(msg.value >= mintPrice,"EggToken : Be short of money");
@@ -44,23 +41,15 @@ contract EggToken is ERC721Enumerable, Ownable {
         // CA에 지급받은 이더를 전송해준다.
         payable(Ownable.owner()).transfer(msg.value);
 
+        uint256 tokenId = totalSupply() + 1;
         // 함수를 호출한 계정(배포자)에 NTF 발행
-        _mint(msg.sender, _tokenId);
+        _mint(msg.sender, tokenId);
 
         setApprovalForAll(_saleContractCA, true);
 
-        tokenList.push(_tokenId);
+        tokenList.push(tokenId);
 
-        emit Minting(_tokenId, "Minted", 0, address(0), msg.sender);
-    }
-
-    function _overlapCheckTokenId(uint8 _tokenId) private view returns (bool){
-        if(tokenList.length == 0) return true;
-        //  토큰 갯수는 최대 100개이므로 0~255의 범위를 가진 uint8을 사용한다.
-        for(uint8 i = 0; i < tokenList.length; i++){
-            if(tokenList[i] == _tokenId) return false;
-        }
-        return true;
+        emit Minting(tokenId, "Minted", 0, address(0), msg.sender);
     }
 
     function tokenURI(uint _tokenId) public override view returns (string memory) {

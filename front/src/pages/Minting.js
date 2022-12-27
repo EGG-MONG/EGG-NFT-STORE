@@ -26,15 +26,14 @@ const Minting = (/*{ web3, account }*/) => {
     setLoading(true);
     setFinish(false);
     try {
-      const tokenId = Math.floor(Math.random() * 100) + 1;
       const result = await eggToken.deployed.methods
-        .mintToken(saleContract.CA, tokenId)
+        .mintToken(saleContract.CA)
         .send({ from: account, value: 100 });
       setFinish(true);
       setImgId(result.events.Minting.returnValues.tokenId);
       setLoading(false);
 
-      const { transaction, transfer } = await nftEvent(
+      const { tokenId, transaction, transfer } = await nftEvent(
         web3,
         result.events.Minting
       );
