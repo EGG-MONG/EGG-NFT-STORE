@@ -56,7 +56,7 @@ const Minting = (/*{ web3, account }*/) => {
               <>
                 <SuccessMsg>Minting Success!</SuccessMsg>
                 <MintedImg
-                  src={`http://localhost:8000/images/${imgId}.png`}
+                  src={`http://3.36.72.252:8000/images/${imgId}.png`}
                   alt="minted Img"
                 />
               </>
