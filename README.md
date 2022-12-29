@@ -4,12 +4,20 @@ NFT 거래소를 구현하는 것을 목표로한다. 본인 소유 NTF 민팅, 
 ## 📌팀원
 손윤미, 이수진
 
+### 역할분담
+| 담당자 | 작업 내용 |
+| --- | --- |
+| 수진 | 컨트랙트 작성 |
+||   데이터베이스 |
+| 윤미 | 프론트 UI 작업 |
+||   aws 배포 |
 ## 📌개발기간
-2022-12-19 ~ 2022-12-27(8일)
+2022-12-19 ~ 2022-12-27(9일)
 
 ## 📌개발환경
-| 프론트 | React, Redux, StyledComponents |
+| 영역 | 사용한 기술 |
 | --- | --- |
+| 프론트 | React, Redux, StyledComponents |
 | 백 | Express, mongoose |
 | DB | mongoDB |
 | 배포 | aws |
@@ -22,11 +30,7 @@ NFT 거래소를 구현하는 것을 목표로한다. 본인 소유 NTF 민팅, 
 | 상세 페이지 | NFT명, 소유자, 제작자, 가격, 구매하기/판매하기, 설명, 속성, 디테일, 트랜잭션(Sale, List, Minted), 트랜스퍼(해시) |
 | 마이 페이지 | 소유한 NFT, 판매하기 |
 
-## 📌타임라인
-![image](https://user-images.githubusercontent.com/107897885/209893386-1e8e21de-8225-4931-a508-97d3d0afb2c2.png)
-
 ## 📌구현한 기능
-
 - 민팅
 - 마이페이지에서 소유한 nft를 볼 수 있다
 - 소유한 nft 판매 등록
@@ -34,6 +38,8 @@ NFT 거래소를 구현하는 것을 목표로한다. 본인 소유 NTF 민팅, 
     - 솔리디티 이벤트를 이용해서 거래내역을 저장했다가 Detail 페이지에 있는 Trasfer에서 보여준다
     - Buy : 구매하기
     - Sell : 판매하기(판매등록을해놨으면) 판매중이 아닐때
-- 개발환경
-    - 리액트, 리덕스
-    - 몽고디비, 노드
+    
+## 📌[타임라인](https://www.notion.so/Team-Project-8d58d7a0acc44d95a880231f348bde3d#d200dbef3a00472880d036e773f4b5a2)
+![image](https://user-images.githubusercontent.com/107897885/209893386-1e8e21de-8225-4931-a508-97d3d0afb2c2.png)
+
+
