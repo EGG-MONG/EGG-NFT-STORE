@@ -104,7 +104,7 @@ const init = {
   eggToken: {
     name: "Egg Token",
     symbol: "ETK",
-    metadataURI: "http://3.36.72.252:8000/metadatas",
+    metadataURI: "http://localhost:8000/metadatas",
     CA: null,
     deployed: null,
   },

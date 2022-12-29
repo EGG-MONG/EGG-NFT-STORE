@@ -6,7 +6,7 @@ module.exports = async function (deployer) {
   // 토큰 정보
   const name = "EggToken";
   const symbol = "ETK";
-  const metadataURI = "http://3.36.72.252:8000/metadatas";
+  const metadataURI = "http://localhost:8000/metadatas";
 
   // 토큰 먼저 배포
   await deployer.deploy(EggToken, name, symbol, metadataURI);
