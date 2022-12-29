@@ -15,9 +15,10 @@ NFT 거래소를 구현하는 것을 목표로한다. 본인 소유 NTF 민팅, 
 | --- | --- |
 | 화면구성 | React, Redux, StyledComponents |
 | 서버 | Express, mongoose |
-| DB | mongoDB |
+| 데이터베이스 | mongoDB |
 | AWS배포 | EC2 |
-| 테스트 | remix, ganache, goerli |
+| 컨트랙트 배포 | goerli |
+| 테스트 | remix, ganache |
 | 프로젝트 관리 | gtihub, notion |  
 
 
@@ -56,3 +57,7 @@ NFT 거래소를 구현하는 것을 목표로한다. 본인 소유 NTF 민팅, 
 
 ### 상점페이지
 ![7](https://user-images.githubusercontent.com/107897885/209900149-3e25fb94-6a74-4d90-aebb-1eb56ff32864.png)
+
+
+## 📌[이슈](https://github.com/EGG-MONG/EGG-NFT-STORE/issues)
+(git issues에 정리)
