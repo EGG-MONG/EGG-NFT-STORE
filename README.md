@@ -13,7 +13,7 @@ NFT 거래소를 구현하는 것을 목표로한다. 본인 소유 NTF 민팅, 
 ## 📌개발환경
 | 영역 | 사용한 기술 |
 | --- | --- |
-| 화면구성 | React, Redux, StyledComponents |
+| 화면구성 | React, Redux, StyledComponents, Web3 |
 | 서버 | Express, mongoose |
 | 데이터베이스 | mongoDB |
 | AWS배포 | EC2 |
