@@ -1,25 +1,32 @@
-
-</br>
-
 # EGG-NFT-STORE
 NFT 거래소를 구현하는 것을 목표로한다. 본인 소유 NTF 민팅, 구매, 판매 기 배포자 한정 NFT 업로드 기능을 만든다.
 
+
 <br />
 <br />
+
 
 ## 📌팀원
 손윤미, 이수진
 
+
 <br />
 <br />
+
 
 ## 📌개발기간
+
+
 2022-12-19 ~ 2022-12-27(9일)
 
+
 <br />
 <br />
 
+
 ## 📌개발환경
+
+
 | 영역 | 사용한 기술 |
 | --- | --- |
 | 화면구성 | React, Redux, StyledComponents, Web3 |
@@ -30,16 +37,24 @@ NFT 거래소를 구현하는 것을 목표로한다. 본인 소유 NTF 민팅, 
 | 테스트 | remix, ganache |
 | 프로젝트 관리 | gtihub, notion |  
 
+
+
 <br />
 <br />
+
 
 ## 📌Database Table 구조
 ![image](https://user-images.githubusercontent.com/50866572/220256158-6e0d731e-3512-4731-81fd-2e8c6e2846a3.png)
 
+
 <br />
 <br />
 
+
 ## 📌페이지 구성
+
+
+
 | 페이지 | 상세기능 |
 | --- | --- |
 | 민팅 페이지 | 민팅하기 |
@@ -47,8 +62,12 @@ NFT 거래소를 구현하는 것을 목표로한다. 본인 소유 NTF 민팅, 
 | 상세 페이지 | NFT명, 소유자, 제작자, 가격, 구매하기/판매하기, 설명, 속성, 트랜스퍼(Sale, List, Minted, Transaction), 트랜잭션(hash) |
 | 마이 페이지 | 메타마스크 연결, 소유한 NFT, 판매하기 |
 
+
+
 <br />
 <br />
+
+
 
 ## 📌주요 기능
 - NFT 민팅
