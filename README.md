@@ -35,6 +35,7 @@ NFT 거래소를 구현하는 것을 목표로한다. 본인 소유 NTF 민팅, 
 | --- | --- |
 | 화면구성 | React, Redux, StyledComponents, Web3 |
 | 서버 | Express, mongoose |
+| 컨트랙트 | Solidity |
 | 데이터베이스 | mongoDB |
 | AWS배포 | EC2 |
 | 컨트랙트 배포 | goerli |
